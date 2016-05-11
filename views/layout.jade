@@ -1,0 +1,21 @@
+doctype html
+html
+  head
+    title Notes
+    link(rel='stylesheet', href='/stylesheets/bootstrap.min.css')
+    link(rel='stylesheet', href='/stylesheets/simple-sidebar.css')
+    link(rel='stylesheet', href='/stylesheets/simplemde.min.css')
+    script(src='/javascripts/simplemde.min.js')
+  body
+    div#wrapper
+      div#sidebar-wrapper
+        ul.sidebar-nav
+          li.sidebar-brand: p.sidebar-brand-title Notes App
+          li: a(href='/') Home
+          li: a(href='/create') Add a new note
+          li: a(href='/notes') Manage notes
+      div#page-content-wrapper
+        div.container-fluid
+          block content
+        script(src='/javascripts/jquery.js')
+        script(src='/javascripts/bootstrap.min.js')

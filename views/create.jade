@@ -1,0 +1,30 @@
+extends layout
+
+block content
+  h1 Add a new note!
+  br
+  form.form-horizontal(role='form', accept-charset='utf-8', action='/create', method='post')
+    textArea#note(name='note', style='display: none')
+    div.form-group
+      div.markdown.editor
+        input#title.form-control(name='title', value='', placeholder='Title...')
+    div.form-group
+      div.markdown.editor
+        textarea#noteArea.form-control(name='noteArea', style='display: none')
+    div.form-group
+      div.markdown.editor
+        input#submit.btn.btn-primary(name='submit', type='submit', value='Save', onclick='setValue()')
+  script.
+    var simplemde = new SimpleMDE({
+      element: document.getElementById('noteArea'),
+      toolbar: [
+        "bold", "italic", "heading", "|",
+        "quote", "unordered-list", "ordered-list", "|",
+        "link", "image", "|", "preview", "|", "guide"
+      ],
+      spellChecker: false
+    });
+    function setValue() {
+      document.getElementById('note').value = simplemde.value();
+    }
+

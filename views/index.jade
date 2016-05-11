@@ -1,0 +1,30 @@
+extends layout
+
+block content
+  h1 Markdown Editor
+  br
+  div#infoBlock
+    p.infoText This is a note taking application that runs in the browser.
+  br
+  div
+    h2.notebooks Notebooks
+    button.btn.btn-info.btn-sm.notebooks(type='button', data-toggle='modal', data-target='#addNotebook') Add Notebook
+  br
+  each val in (locals.notebookNames)
+    div.panel.panel-default
+      div.panel-body
+        p.noteCondensed= val.name
+      div.panel-footer.clearfix
+        a.btn.btn-default.btn-sm(href='#' + val.id) Edit
+        a.btn.btn-default.btn-sm(href='#' + val.id) Notes
+        a.btn.btn-default.btn-sm(href='#' + val.id) Delete
+
+  div#addNotebook.modal.fade(role='dialog')
+    div.modal-dialog
+      div.modal-content
+        div.modal-body
+          form(role='form', accept-charset='utf-8', action='/notebooks/create/', method='post')
+            div.form-group
+              input#title.form-control(name='title', value='', placeholder='Name...')
+            div.form-group
+              input#submit.btn.btn-primary(name='submit', type='submit', value='Save')

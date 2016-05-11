@@ -1,0 +1,16 @@
+extends layout
+
+block content
+  h1= title
+  br
+  textArea#note(name='note', style='display: none')= note
+  div.markdown.editor
+    textarea#noteArea.form-control(name='noteArea', style='display: none')
+  script.
+    var simplemde = new SimpleMDE({
+      element: document.getElementById('noteArea'),
+      toolbar: false,
+      status: false
+    });
+    simplemde.value(document.getElementById('note').value);
+    simplemde.togglePreview();
