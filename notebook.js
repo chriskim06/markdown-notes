@@ -1,5 +1,5 @@
 /**
- * @fileoverview
+ * @fileoverview Schema definition for notebooks
  * @author Chris
  */
 
@@ -11,4 +11,3 @@ var notebook = new mongoose.Schema({
 });
 
 mongoose.model('Notebooks', notebook);
-// mongoose.connect('mongodb://localhost/notes');

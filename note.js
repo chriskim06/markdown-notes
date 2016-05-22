@@ -1,5 +1,5 @@
 /**
- * @fileoverview
+ * @fileoverview Schema definition for notes
  * @author Chris
  */
 
@@ -13,4 +13,3 @@ var note = new mongoose.Schema({
 });
 
 mongoose.model('Notes', note);
-// mongoose.connect('mongodb://localhost/notes');
