@@ -1,5 +1,5 @@
 /**
- * @fileoverview
+ * @fileoverview Create a new note
  * @author Chris
  */
 

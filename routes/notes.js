@@ -1,5 +1,5 @@
 /**
- * @fileoverview
+ * @fileoverview Get all/delete notes
  * @author Chris
  */
 

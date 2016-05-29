@@ -1,3 +1,8 @@
+/**
+ * @fileoverview List/create notebooks
+ * @author Chris
+ */
+
 var express = require('express');
 var router = express.Router();
 
