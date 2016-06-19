@@ -7,7 +7,7 @@ var express = require('express');
 var router = express.Router();
 
 var mongoose = require('mongoose');
-var Note = mongoose.model('Notes');
+var Note = mongoose.model('Note');
 
 /* GET create page. */
 router.get('/', function(req, res, next) {
@@ -15,10 +15,9 @@ router.get('/', function(req, res, next) {
 });
 
 router.post('/', function(req, res, next) {
-  var content = req.body;
   var note = new Note({
-    title: content.title,
-    content: content.note,
+    title: req.body.title,
+    content: req.body.note,
     updated: Date.now()
   });
   note.save(function(err) {

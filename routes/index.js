@@ -7,11 +7,11 @@ var express = require('express');
 var router = express.Router();
 
 var mongoose = require('mongoose');
-var Notebook = mongoose.model('Notebooks');
+var Notebook = mongoose.model('Notebook');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  getNotebooks(res);
+  getAllNotebooks(res);
 });
 
 router.post('/notebooks/create', function(req, res, next) {
@@ -23,24 +23,17 @@ router.post('/notebooks/create', function(req, res, next) {
     if (err) {
       return next(err);
     } else {
-      getNotebooks(res);
+      getAllNotebooks(res);
     }
   });
 });
 
-function getNotebooks(res) {
-  Notebook.find({}, function(err, data) {
+function getAllNotebooks(res) {
+  Notebook.getNotebooks(0, 0, function (err, results) {
     if (err) {
       res.redirect('/');
     } else {
-      var notebooks = [];
-      data.forEach(function(notebookInstance) {
-        notebooks.push({
-          id: notebookInstance._id,
-          name: notebookInstance.name
-        });
-      });
-      res.render('index', { notebookNames: notebooks });
+      res.render('index', { notebookNames: results });
     }
   });
 }
