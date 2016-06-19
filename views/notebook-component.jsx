@@ -32,9 +32,15 @@ var NotebookActions = React.createClass({
   render: function() {
     return (
       <div className="panel-footer clearfix">
-        <a className="btn btn-default btn-sm" href={'#' + this.props.notebookIdentifier}>Edit</a>
-        <a className="btn btn-default btn-sm" href={'#' + this.props.notebookIdentifier}>Notes</a>
-        <a className="btn btn-default btn-sm" href={'#' + this.props.notebookIdentifier}>Delete</a>
+        <a className="btn btn-default btn-sm" title="Edit" href={'#' + this.props.notebookIdentifier}>
+          <i className="fa fa-pencil-square-o fa-lg" aria-hidden="true" />&nbsp;Edit
+        </a>&nbsp;&nbsp;&nbsp;
+        <a className="btn btn-default btn-sm" title="Notes" href={'#' + this.props.notebookIdentifier}>
+          <i className="fa fa-file-text fa-lg" aria-hidden="true" />&nbsp;Notes
+        </a>&nbsp;&nbsp;&nbsp;
+        <a className="btn btn-default btn-sm" title="Delete" href={'#' + this.props.notebookIdentifier}>
+          <i className="fa fa-trash-o fa-lg" aria-hidden="true" />&nbsp;Delete
+        </a>
       </div>
     );
   }
