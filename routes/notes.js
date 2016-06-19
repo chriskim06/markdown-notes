@@ -10,7 +10,7 @@ var mongoose = require('mongoose');
 var Note = mongoose.model('Note');
 
 router.get('/', function(req, res, next) {
-  Note.find({}, function(err, data) {
+  Note.getNotes(0, 0, function(err, data) {
     if (err) {
       res.redirect('/');
     } else {
@@ -37,9 +37,8 @@ router.get('/', function(req, res, next) {
 });
 
 router.post('/delete/:id', function(req, res, next) {
-  var id = req.params.id;
-  if (id) {
-    Note.findOneAndRemove({ _id: id }, function(err, data) {
+  if (req.params.id) {
+    Note.findOneAndRemove({ _id: req.params.id }, function(err, data) {
       res.redirect('/notes');
     });
   }

@@ -5,12 +5,12 @@
 
 var mongoose = require('mongoose');
 
-var NotebookSchema = new mongoose.Schema({
+var notebookSchema = new mongoose.Schema({
   name: { type: String, unique: true },
   notes: [mongoose.Schema.Types.ObjectId]
 });
 
-NotebookSchema.statics.getNotebooks = function(skip, limit, callback) {
+notebookSchema.statics.getNotebooks = function(skip, limit, callback) {
   var query = this.find({});
   if (skip !== null) {
     query = query.skip(skip);
@@ -31,4 +31,4 @@ NotebookSchema.statics.getNotebooks = function(skip, limit, callback) {
   });
 };
 
-mongoose.model('Notebook', NotebookSchema);
+mongoose.model('Notebook', notebookSchema);

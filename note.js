@@ -5,14 +5,14 @@
 
 var mongoose = require('mongoose');
 
-var NoteSchema = new mongoose.Schema({
+var noteSchema = new mongoose.Schema({
   title: String,
   content: String,
   notebook: String,
   updated: { type: Date, default: Date.now() }
 });
 
-NoteSchema.statics.getNotes = function(skip, limit, callback) {
+noteSchema.statics.getNotes = function(skip, limit, callback) {
   var query = this.find({});
   if (skip !== null) {
     query = query.skip(skip);
@@ -25,4 +25,4 @@ NoteSchema.statics.getNotes = function(skip, limit, callback) {
   });
 };
 
-mongoose.model('Note', NoteSchema);
+mongoose.model('Note', noteSchema);
