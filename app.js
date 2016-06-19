@@ -10,18 +10,12 @@ var app = express();
 // connect to mongodb instance
 require('./note');
 require('./notebook');
-var mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost/notes');
-
-var index = require('./routes/index');
-var create = require('./routes/create');
-var notes = require('./routes/notes');
-var update = require('./routes/update');
-var preview = require('./routes/preview');
+require('mongoose').connect('mongodb://localhost/notes');
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'jade');
+app.set('view engine', 'jsx');
+app.engine('jsx', require('express-react-views').createEngine());
 
 // uncomment after placing your favicon in /public
 app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
@@ -31,11 +25,11 @@ app.use(bodyParser.urlencoded({extended: false}));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', index);
-app.use('/create', create);
-app.use('/notes', notes);
-app.use('/update', update);
-app.use('/preview', preview);
+app.use('/', require('./routes/index'));
+app.use('/create', require('./routes/create'));
+app.use('/notes', require('./routes/notes'));
+app.use('/update', require('./routes/update'));
+app.use('/preview', require('./routes/preview'));
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -67,6 +61,5 @@ app.use(function(err, req, res, next) {
     error: {}
   });
 });
-
 
 module.exports = app;
