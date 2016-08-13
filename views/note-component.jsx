@@ -3,10 +3,10 @@
  * @author Chris
  */
 
-var React = require('react');
+import React from 'react'
 
-var NoteComponent = React.createClass({
-  render: function() {
+export default React.createClass({
+  render() {
     return (
       <div>
         <form role="form" acceptCharset="utf-8" action={'/notes/delete/' + this.props.data.id} method="post">
@@ -31,8 +31,6 @@ var NoteComponent = React.createClass({
           </div>
         </form>
       </div>
-    );
+    )
   }
-});
-
-module.exports = NoteComponent;
+})

@@ -3,44 +3,46 @@
  * @author Chris
  */
 
-var router = require('express').Router();
-var Note = require('mongoose').model('Note');
-var helpers = require('../util/helpers');
+import { doNext } from '../util/helpers'
+import { Router } from 'express'
+import mongoose from 'mongoose'
+const Note = mongoose.model('Note')
+const router = Router()
 
 /**
  * GET all notes
  */
-router.get('/', function(req, res, next) {
-  Note.getNotes(0, 0, function(err, data) {
-    helpers.doNext(err, res, next, data, function(response, after, results) {
-      response.render('notes', {notes: results});
-    });
-  });
-});
+router.get('/', (req, res, next) => {
+  Note.getNotes(0, 0, (err, data) => {
+    doNext(err, res, next, data, (response, after, results) => {
+      response.render('notes', {notes: results})
+    })
+  })
+})
 
 /**
  * CREATE a new note
  */
-router.post('/create', function(req, res, next) {
-  var note = new Note({
+router.post('/create', (req, res, next) => {
+  let note = new Note({
     title: req.body.title,
     content: req.body.note,
     updated: Date.now()
-  });
-  note.persist(res, next, function(response, after, results) {
-    response.redirect('/');
-  });
-});
+  })
+  note.persist(res, next, (response, after, results) => {
+    response.redirect('/')
+  })
+})
 
 /**
  * DELETE a note
  */
-router.post('/delete/:id', function(req, res, next) {
-  Note.findOneAndRemove({_id: req.params.id}, function(err, data) {
-    helpers.doNext(err, res, next, data, function(response, after, results) {
-      response.redirect('/notes');
-    });
-  });
-});
+router.post('/delete/:id', (req, res, next) => {
+  Note.findOneAndRemove({_id: req.params.id}, (err, data) => {
+    doNext(err, res, next, data, (response, after, results) => {
+      response.redirect('/notes')
+    })
+  })
+})
 
-module.exports = router;
+module.exports = router

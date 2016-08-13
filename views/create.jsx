@@ -3,12 +3,12 @@
  * @author Chris
  */
 
-var React = require('react');
-var DefaultLayout = require('./layouts/default');
+import React from 'react'
+import DefaultLayout from './layouts/default'
 
-var CreateComponent = React.createClass({
-  setValue: function() {
-    var simplemde = new SimpleMDE({
+export default React.createClass({
+  setValue() {
+    let simplemde = new SimpleMDE({
       element: document.getElementById('noteArea'),
       toolbar: [
         "bold", "italic", "heading", "|",
@@ -16,10 +16,10 @@ var CreateComponent = React.createClass({
         "link", "image", "|", "preview", "|", "guide"
       ],
       spellChecker: false
-    });
-    document.getElementById('note').value = simplemde.value();
+    })
+    document.getElementById('note').value = simplemde.value()
   },
-  render: function() {
+  render() {
     return (
       <DefaultLayout>
         <h1>{this.props.title}</h1>
@@ -43,8 +43,7 @@ var CreateComponent = React.createClass({
           </div>
         </form>
       </DefaultLayout>
-    );
+    )
   }
-});
+})
 
-module.exports = CreateComponent;

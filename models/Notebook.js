@@ -3,13 +3,13 @@
  * @author Chris
  */
 
-var mongoose = require('mongoose');
-var helpers = require('../util/helpers');
+import mongoose from 'mongoose'
+import { doNext } from '../util/helpers'
 
-var notebookSchema = new mongoose.Schema({
+const notebookSchema = new mongoose.Schema({
   name: {type: String, unique: true},
   notes: [mongoose.Schema.Types.ObjectId]
-});
+})
 
 /**
  * Common method for all Notebook instances
@@ -18,10 +18,10 @@ var notebookSchema = new mongoose.Schema({
  * @param callback
  */
 notebookSchema.methods.persist = function(res, next, callback) {
-  this.save(function(err) {
-    helpers.doNext(err, res, next, null, callback);
-  });
-};
+  this.save((err) => {
+    doNext(err, res, next, null, callback)
+  })
+}
 
 /**
  * Static method for getting an array of notes
@@ -30,23 +30,23 @@ notebookSchema.methods.persist = function(res, next, callback) {
  * @param callback
  */
 notebookSchema.statics.getNotebooks = function(skip, limit, callback) {
-  var query = this.find({});
+  let query = this.find({})
   if (skip !== null) {
-    query = query.skip(skip);
+    query = query.skip(skip)
   }
   if (limit > 0) {
-    query = query.limit(limit);
+    query = query.limit(limit)
   }
-  query.exec(function(err, results) {
-    var notebooks = [];
-    results.forEach(function(notebook) {
+  query.exec((err, results) => {
+    let notebooks = []
+    results.forEach((notebook) => {
       notebooks.push({
         id: notebook._id,
         name: notebook.name
-      });
-    });
-    callback(err, notebooks);
-  });
-};
+      })
+    })
+    callback(err, notebooks)
+  })
+}
 
-mongoose.model('Notebook', notebookSchema);
+mongoose.model('Notebook', notebookSchema)

@@ -3,15 +3,15 @@
  * @author Chris
  */
 
-var mongoose = require('mongoose');
-var helpers = require('../util/helpers');
+import mongoose from 'mongoose'
+import { doNext } from '../util/helpers'
 
-var noteSchema = new mongoose.Schema({
+const noteSchema = new mongoose.Schema({
   title: String,
   content: String,
   notebook: String,
   updated: {type: Date, default: Date.now()}
-});
+})
 
 /**
  * Common method for all Note instances
@@ -20,10 +20,10 @@ var noteSchema = new mongoose.Schema({
  * @param callback
  */
 noteSchema.methods.persist = function(res, next, callback) {
-  this.save(function(err) {
-    helpers.doNext(err, res, next, null, callback);
-  });
-};
+  this.save((err) => {
+    doNext(err, res, next, null, callback)
+  })
+}
 
 /**
  * Static method for getting an array of notes
@@ -32,32 +32,32 @@ noteSchema.methods.persist = function(res, next, callback) {
  * @param callback
  */
 noteSchema.statics.getNotes = function(skip, limit, callback) {
-  var query = this.find({});
+  let query = this.find({})
   if (skip !== null) {
-    query = query.skip(skip);
+    query = query.skip(skip)
   }
   if (limit > 0) {
-    query = query.limit(limit);
+    query = query.limit(limit)
   }
-  query.exec(function(err, results) {
-    var items = [];
-    results.forEach(function(note) {
-      var condensed = note.content.substr(0, 75);
+  query.exec((err, results) => {
+    let items = []
+    results.forEach((note) => {
+      let condensed = note.content.substr(0, 75)
       if (condensed.length === 75) {
-        condensed += '...';
+        condensed += '...'
       }
-      var time = new Date(note.updated);
+      let time = new Date(note.updated)
       items.push({
         id: note._id,
         title: note.title,
         summary: condensed,
         content: note.content,
         edited: time.toLocaleString()
-      });
-    });
-    items.reverse();
-    callback(err, items);
-  });
-};
+      })
+    })
+    items.reverse()
+    callback(err, items)
+  })
+}
 
-mongoose.model('Note', noteSchema);
+mongoose.model('Note', noteSchema)

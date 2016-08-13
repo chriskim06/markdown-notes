@@ -3,60 +3,62 @@
  * @author Chris
  */
 
-var router = require('express').Router();
-var Notebook = require('mongoose').model('Notebook');
-var helpers = require('../util/helpers');
+import { doNext } from '../util/helpers'
+import { Router } from 'express'
+import mongoose from 'mongoose'
+const Notebook = mongoose.model('Notebook')
+const router = Router()
 
 /**
  * GET all notebooks
  */
-router.get('/', function(req, res, next) {
-  getAllNotebooks(res, next);
-});
+router.get('/', (req, res, next) => {
+  getAllNotebooks(res, next)
+})
 
 /**
  * CREATE a new notebook
  */
-router.post('/create', function(req, res, next) {
-  var notebook = new Notebook({
+router.post('/create', (req, res, next) => {
+  let notebook = new Notebook({
     name: req.body.title,
     notes: []
-  });
-  notebook.persist(res, next, getAllNotebooks);
-});
+  })
+  notebook.persist(res, next, getAllNotebooks)
+})
 
 /**
  * UPDATE an existing notebook
  */
-router.post('/edit', function(req, res, next) {
-  Notebook.findOne({_id: req.body.notebookId}, function(err, data) {
-    helpers.doNext(err, res, next, data, function(response, after, results) {
-      results.name = req.body.title;
-      results.persist(response, after, getAllNotebooks);
-    });
-  });
-});
+router.post('/edit', (req, res, next) => {
+  Notebook.findOne({_id: req.body.notebookId}, (err, data) => {
+    doNext(err, res, next, data, (response, after, results) => {
+      results.name = req.body.title
+      results.persist(response, after, getAllNotebooks)
+    })
+  })
+})
 
 /**
  * DELETE a notebook
  */
-router.post('/delete', function(req, res, next) {
-  Notebook.findOneAndRemove({_id: req.body.notebookId}, function(err, data) {
-    helpers.doNext(err, res, next, data, getAllNotebooks);
-  });
-});
+router.post('/delete', (req, res, next) => {
+  Notebook.findOneAndRemove({_id: req.body.notebookId}, (err, data) => {
+    doNext(err, res, next, data, getAllNotebooks)
+  })
+})
 
 /**
  * Private function for returning the list of notebooks
  * @param res
  * @param next
  */
-function getAllNotebooks(res, next) {
-  Notebook.getNotebooks(0, 0, function(err, data) {
-    helpers.doNext(err, res, next, data, function(response, after, results) {
-      response.render('index', {notebookNames: results});
-    });
-  });
+const getAllNotebooks = (res, next) => {
+  Notebook.getNotebooks(0, 0, (err, data) => {
+    doNext(err, res, next, data, (response, after, results) => {
+      response.render('index', {notebookNames: results})
+    })
+  })
 }
 
-module.exports = router;
+module.exports = router

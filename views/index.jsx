@@ -3,16 +3,16 @@
  * @author Chris
  */
 
-var React = require('react');
-var DefaultLayout = require('./layouts/default');
-var NotebookComponent = require('./notebook-component');
-var AddNotebook = require('./add-notebook');
+import React from 'react'
+import DefaultLayout from './layouts/default'
+import NotebookComponent from './notebook-component'
+import AddNotebook from './add-notebook'
 
-var Index = React.createClass({
-  render: function() {
-    var content = this.props.notebookNames.map(function(notebook) {
+export default React.createClass({
+  render() {
+    var content = this.props.notebookNames.map((notebook) => {
       return <NotebookComponent key={notebook.id} data={notebook} />
-    });
+    })
     return (
       <DefaultLayout>
         <div>
@@ -27,8 +27,6 @@ var Index = React.createClass({
         </div>
         <AddNotebook />
       </DefaultLayout>
-    );
+    )
   }
-});
-
-module.exports = Index;
+})

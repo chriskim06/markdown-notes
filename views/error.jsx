@@ -3,18 +3,18 @@
  * @author Chris
  */
 
-var React = require('react');
-var DefaultLayout = require('./layouts/default');
+import React from 'react'
+import DefaultLayout from './layouts/default'
 
-var Error = React.createClass({
-  printOutput: function() {
+export default React.createClass({
+  printOutput() {
     if (this.props.err.length > 0) {
-      return <pre>{this.props.err}</pre>;
+      return <pre>{this.props.err}</pre>
     } else {
-      return <p>{this.props.message}</p>;
+      return <p>{this.props.message}</p>
     }
   },
-  render: function() {
+  render() {
     return (
       <DefaultLayout>
         <div>
@@ -23,8 +23,6 @@ var Error = React.createClass({
           {this.printOutput()}
         </div>
       </DefaultLayout>
-    );
+    )
   }
-});
-
-module.exports = Error;
+})

@@ -3,33 +3,33 @@
  * @author Chris
  */
 
-var React = require('react');
+import React from 'react'
 
-var NotebookComponent = React.createClass({
-  render: function() {
-    var notebookId = this.props.data.id;
-    var notebookName = this.props.data.name;
+export default React.createClass({
+  render() {
+    let notebookId = this.props.data.id
+    let notebookName = this.props.data.name
     return (
       <div className="panel panel-default">
         <NotebookName notebookName={notebookName} />
         <NotebookActions notebookName={notebookName} notebookId={notebookId} />
       </div>
-    );
+    )
   }
-});
+})
 
-var NotebookName = React.createClass({
-  render: function() {
+let NotebookName = React.createClass({
+  render() {
     return (
       <div className="panel-body">
         <p className="noteCondensed">{this.props.notebookName}</p>
       </div>
-    );
+    )
   }
-});
+})
 
-var NotebookActions = React.createClass({
-  render: function() {
+let NotebookActions = React.createClass({
+  render() {
     return (
       <div className="panel-footer clearfix">
         <button className="btn btn-info btn-sm" type="button" data-toggle="modal" data-target={'#edit-' + this.props.notebookId}>
@@ -74,8 +74,6 @@ var NotebookActions = React.createClass({
           </div>
         </div>
       </div>
-    );
+    )
   }
-});
-
-module.exports = NotebookComponent;
+})

@@ -3,10 +3,10 @@
  * @author Chris
  */
 
-var React = require('react');
+import React from 'react'
 
-var DefaultLayout = React.createClass({
-  render: function() {
+export default React.createClass({
+  render() {
     return (
       <html>
         <head>
@@ -41,8 +41,7 @@ var DefaultLayout = React.createClass({
           </div>
         </body>
       </html>
-    );
+    )
   }
-});
+})
 
-module.exports = DefaultLayout;

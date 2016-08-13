@@ -3,10 +3,10 @@
  * @author Chris
  */
 
-var React = require('react');
+import React from 'react'
 
-var AddNotebook = React.createClass({
-  render: function() {
+export default React.createClass({
+  render() {
     return (
       <div id="addNotebook" className="modal fade" role="dialog">
         <div className="modal-dialog">
@@ -24,8 +24,6 @@ var AddNotebook = React.createClass({
           </div>
         </div>
       </div>
-    );
+    )
   }
-});
-
-module.exports = AddNotebook;
+})
