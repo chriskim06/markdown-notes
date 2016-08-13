@@ -3,20 +3,15 @@
  * @author Chris
  */
 
-var express = require('express');
-var router = express.Router();
+var router = require('express').Router();
+var Notebook = require('mongoose').model('Notebook');
+var helpers = require('../util/helpers');
 
-var mongoose = require('mongoose');
-var Notebook = mongoose.model('Notebook');
-
-/* GET home page. */
 router.get('/', function(req, res, next) {
-  Notebook.getNotebooks(0, 0, function(err, results) {
-    if (err) {
-      res.redirect('/');
-    } else {
-      res.render('index', { notebookNames: results });
-    }
+  Notebook.getNotebooks(0, 0, function(err, data) {
+    helpers.doNext(err, res, next, data, function(response, after, results) {
+      response.render('index', {notebookNames: results});
+    });
   });
 });
 

@@ -3,14 +3,12 @@
  * @author Chris
  */
 
-var express = require('express');
-var router = express.Router();
-
-var mongoose = require('mongoose');
-var Notebook = mongoose.model('Notebook');
+var router = require('express').Router();
+var Notebook = require('mongoose').model('Notebook');
+var helpers = require('../util/helpers');
 
 router.get('/', function(req, res, next) {
-  getAllNotebooks(res);
+  getAllNotebooks(res, next);
 });
 
 router.post('/create', function(req, res, next) {
@@ -18,51 +16,29 @@ router.post('/create', function(req, res, next) {
     name: req.body.title,
     notes: []
   });
-  notebook.save(function(err) {
-    if (err) {
-      return next(err);
-    } else {
-      getAllNotebooks(res);
-    }
-  });
+  notebook.persist(res, next, getAllNotebooks);
 });
 
 router.post('/edit', function(req, res, next) {
-  var query = { _id: req.body.notebookId };
-  Notebook.findOne(query, function(err, data) {
-    if (err) {
-      return next(err);
-    } else {
-      data.name = req.body.title;
-      data.save(function(err) {
-        if (err) {
-          return next(err);
-        } else {
-          getAllNotebooks(res);
-        }
-      });
-    }
+  Notebook.findOne({_id: req.body.notebookId}, function(err, data) {
+    helpers.doNext(err, res, next, data, function(response, after, results) {
+      results.name = req.body.title;
+      results.persist(response, after, getAllNotebooks);
+    });
   });
 });
 
 router.post('/delete', function(req, res, next) {
-  var query = { _id: req.body.notebookId };
-  Notebook.findOneAndRemove(query, function(err, data) {
-    if (err) {
-      return next(err);
-    } else {
-      getAllNotebooks(res);
-    }
+  Notebook.findOneAndRemove({_id: req.body.notebookId}, function(err, data) {
+    helpers.doNext(err, res, next, data, getAllNotebooks);
   });
 });
 
-function getAllNotebooks(res) {
-  Notebook.getNotebooks(0, 0, function(err, results) {
-    if (err) {
-      res.redirect('/');
-    } else {
-      res.render('index', { notebookNames: results });
-    }
+function getAllNotebooks(res, next) {
+  Notebook.getNotebooks(0, 0, function(err, data) {
+    helpers.doNext(err, res, next, data, function(response, after, results) {
+      response.render('index', {notebookNames: results});
+    });
   });
 }
 

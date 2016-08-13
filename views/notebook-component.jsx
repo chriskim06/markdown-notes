@@ -5,14 +5,14 @@
 
 var React = require('react');
 
-var Notebook = React.createClass({
+var NotebookComponent = React.createClass({
   render: function() {
     var notebookId = this.props.data.id;
     var notebookName = this.props.data.name;
     return (
       <div className="panel panel-default">
-        <NotebookName notebookTitle={notebookName} />
-        <NotebookActions notebookTitle={notebookName} notebookId={notebookId} />
+        <NotebookName notebookName={notebookName} />
+        <NotebookActions notebookName={notebookName} notebookId={notebookId} />
       </div>
     );
   }
@@ -22,7 +22,7 @@ var NotebookName = React.createClass({
   render: function() {
     return (
       <div className="panel-body">
-        <p className="noteCondensed">{this.props.notebookTitle}</p>
+        <p className="noteCondensed">{this.props.notebookName}</p>
       </div>
     );
   }
@@ -64,7 +64,7 @@ var NotebookActions = React.createClass({
               <div className="modal-body">
                 <form acceptCharset="utf-8" action="/notebooks/delete" method="post">
                   <input id="notebookId" name="notebookId" type="hidden" value={this.props.notebookId} />
-                  <p>Are you sure you want to delete the note '{this.props.notebookTitle}'</p>
+                  <p>Are you sure you want to delete the note '{this.props.notebookName}'</p>
                   <div className="form-group">
                     <input id="submit" className="btn btn-primary" name="submit" type="submit" value="Confirm" />
                   </div>
@@ -78,28 +78,4 @@ var NotebookActions = React.createClass({
   }
 });
 
-var NotebookEdit = React.createElement({
-  render: function() {
-    return (
-      <div id={this.props.notebookId} className="modal fade" role="dialog">
-        <div className="modal-dialog">
-          <div className="modal-content">
-            <div className="modal-body">
-              <form acceptCharset="utf-8" action="/notebooks/edit" method="post">
-                <input id="notebookId" name="notebookId" type="hidden" value={this.props.notebookId} />
-                <div className="form-group">
-                  <input id="title" className="form-control" name="title" value="" placeholder="Name..." />
-                </div>
-                <div className="form-group">
-                  <input id="submit" className="btn btn-primary" name="submit" type="submit" value="Save" />
-                </div>
-              </form>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
-});
-
-module.exports = Notebook;
+module.exports = NotebookComponent;

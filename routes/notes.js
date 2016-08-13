@@ -1,47 +1,37 @@
 /**
- * @fileoverview Get all/delete notes
+ * @fileoverview Create, get, and delete notes
  * @author Chris
  */
 
-var express = require('express');
-var router = express.Router();
-
-var mongoose = require('mongoose');
-var Note = mongoose.model('Note');
+var router = require('express').Router();
+var Note = require('mongoose').model('Note');
+var helpers = require('../util/helpers');
 
 router.get('/', function(req, res, next) {
   Note.getNotes(0, 0, function(err, data) {
-    if (err) {
-      res.redirect('/');
-    } else {
-      var items = [];
-      data.forEach(function(note) {
-        var condensed = note.content.substr(0, 75);
-        if (condensed.length === 75) {
-          condensed += '...';
-        }
-        var time = new Date(note.updated);
-        items.push({
-          id: note._id,
-          title: note.title,
-          summary: condensed,
-          content: note.content,
-          edited: time.toLocaleString()
-        });
-      });
-      items.reverse();
+    helpers.doNext(err, res, next, data, function(response, after, results) {
+      response.render('notes', {notes: results});
+    });
+  });
+});
 
-      res.render('notes', { notes: items });
-    }
+router.post('/create', function(req, res, next) {
+  var note = new Note({
+    title: req.body.title,
+    content: req.body.note,
+    updated: Date.now()
+  });
+  note.persist(res, next, function(response, after, results) {
+    response.redirect('/');
   });
 });
 
 router.post('/delete/:id', function(req, res, next) {
-  if (req.params.id) {
-    Note.findOneAndRemove({ _id: req.params.id }, function(err, data) {
-      res.redirect('/notes');
+  Note.findOneAndRemove({_id: req.params.id}, function(err, data) {
+    helpers.doNext(err, res, next, data, function(response, after, results) {
+      response.redirect('/notes');
     });
-  }
+  });
 });
 
 module.exports = router;
