@@ -4,12 +4,27 @@
  */
 
 var React = require('react');
+var DefaultLayout = require('./layouts/default');
 
-var Notebook = React.createClass({
+var Error = React.createClass({
+  printOutput: function() {
+    if (this.props.err.length > 0) {
+      return <pre>{this.props.err}</pre>;
+    } else {
+      return <p>{this.props.message}</p>;
+    }
+  },
   render: function() {
-    console.log(this.props);
     return (
-      <h1>Error</h1>
+      <DefaultLayout>
+        <div>
+          <h1>Error: {this.props.statusCode}</h1>
+          <br />
+          {this.printOutput()}
+        </div>
+      </DefaultLayout>
     );
   }
 });
+
+module.exports = Error;
