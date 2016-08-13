@@ -11,7 +11,7 @@ var Note = mongoose.model('Note');
 
 /* GET create page. */
 router.get('/', function(req, res, next) {
-  res.render('create');
+  res.render('create', { title: 'Add a new note!' });
 });
 
 router.post('/', function(req, res, next) {

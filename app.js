@@ -26,6 +26,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', require('./routes/index'));
+app.use('/notebooks', require('./routes/notebooks'));
 app.use('/create', require('./routes/create'));
 app.use('/notes', require('./routes/notes'));
 app.use('/update', require('./routes/update'));

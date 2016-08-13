@@ -24,10 +24,12 @@ var DefaultLayout = React.createClass({
             <div id="sidebar-wrapper">
               <ul className="sidebar-nav">
                 <li className="sidebar-brand">
-                  <img src="/images/markdown.png" />
+                  <a href="/">
+                    <img src="/images/markdown.png" />
+                  </a>
                 </li>
-                <li><a href="/notes"><i className="fa fa-file-text fa-lg" aria-hidden="true" />&nbsp;&nbsp;Notes</a></li>
                 <li><a href="/"><i className="fa fa-book fa-lg" aria-hidden="true" />&nbsp;&nbsp;Notebooks</a></li>
+                <li><a href="/notes"><i className="fa fa-file-text fa-lg" aria-hidden="true" />&nbsp;&nbsp;Notes</a></li>
                 <li><a href="/create"><i className="fa fa-plus-square fa-lg" aria-hidden="true" />&nbsp;&nbsp;Add a new note</a></li>
               </ul>
             </div>

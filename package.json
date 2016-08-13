@@ -15,6 +15,7 @@
     "marked": "^0.3.5",
     "mongoose": "^4.4.12",
     "morgan": "~1.6.1",
+    "pushbullet": "^1.4.3",
     "react": "^15.1.0",
     "react-dom": "^15.1.0",
     "serve-favicon": "~2.3.0",
