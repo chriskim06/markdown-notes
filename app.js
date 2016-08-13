@@ -34,7 +34,10 @@ app.use('/create', require('./routes/create'));
 app.use('/update', require('./routes/update'));
 app.use('/preview', require('./routes/preview'));
 
-// Error handling middleware
+
+/**
+ * ERROR HANDLING
+ */
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -54,6 +57,7 @@ if (app.get('env') === 'development') {
   });
 }
 
+// Function that renders the error page
 function handleError(err, res, data) {
   console.error(err.stack);
   res.status(err.status || 500);

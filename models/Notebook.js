@@ -11,12 +11,24 @@ var notebookSchema = new mongoose.Schema({
   notes: [mongoose.Schema.Types.ObjectId]
 });
 
+/**
+ * Common method for all Notebook instances
+ * @param res
+ * @param next
+ * @param callback
+ */
 notebookSchema.methods.persist = function(res, next, callback) {
   this.save(function(err) {
     helpers.doNext(err, res, next, null, callback);
   });
 };
 
+/**
+ * Static method for getting an array of notes
+ * @param skip
+ * @param limit
+ * @param callback
+ */
 notebookSchema.statics.getNotebooks = function(skip, limit, callback) {
   var query = this.find({});
   if (skip !== null) {

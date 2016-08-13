@@ -13,12 +13,24 @@ var noteSchema = new mongoose.Schema({
   updated: {type: Date, default: Date.now()}
 });
 
+/**
+ * Common method for all Note instances
+ * @param res
+ * @param next
+ * @param callback
+ */
 noteSchema.methods.persist = function(res, next, callback) {
   this.save(function(err) {
     helpers.doNext(err, res, next, null, callback);
   });
 };
 
+/**
+ * Static method for getting an array of notes
+ * @param skip
+ * @param limit
+ * @param callback
+ */
 noteSchema.statics.getNotes = function(skip, limit, callback) {
   var query = this.find({});
   if (skip !== null) {

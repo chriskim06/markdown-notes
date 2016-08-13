@@ -7,6 +7,9 @@ var router = require('express').Router();
 var Notebook = require('mongoose').model('Notebook');
 var helpers = require('../util/helpers');
 
+/**
+ * GET all notebooks (currently the default page)
+ */
 router.get('/', function(req, res, next) {
   Notebook.getNotebooks(0, 0, function(err, data) {
     helpers.doNext(err, res, next, data, function(response, after, results) {

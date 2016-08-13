@@ -4,6 +4,15 @@
  */
 
 module.exports = {
+
+  /**
+   * Simple function that will either pass the error along or call the callback
+   * @param err
+   * @param res
+   * @param next
+   * @param data
+   * @param callback
+   */
   doNext: function(err, res, next, data, callback) {
     if (err) {
       next(err);
@@ -11,4 +20,5 @@ module.exports = {
       callback(res, next, data);
     }
   }
+
 };

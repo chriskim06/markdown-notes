@@ -3,9 +3,11 @@
  * @author Chris
  */
 
+// Import the global schema definitions defined in the models
 require('./models/Note');
 require('./models/Notebook');
 
+// Connect to the database
 var mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost/notes');
 
