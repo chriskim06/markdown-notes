@@ -14,7 +14,10 @@ export default React.createClass({
           <link rel="stylesheet" href="/stylesheets/bootstrap.min.css" />
           <link rel="stylesheet" href="/stylesheets/simple-sidebar.css" />
           <link rel="stylesheet" href="/stylesheets/simplemde.min.css" />
-          <link rel="stylesheet" href="/font-awesome-4.6.3/css/font-awesome.min.css" />
+          <link rel="stylesheet"
+                href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css"
+                integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1"
+                crossOrigin="anonymous" />
           <script src="/javascripts/simplemde.min.js"></script>
           <script src="/javascripts/jquery.js"></script>
           <script src="/javascripts/bootstrap.min.js"></script>
