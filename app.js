@@ -3,22 +3,24 @@
  * @author Chris
  */
 
-let express = require('express')
-let path = require('path')
-let favicon = require('serve-favicon')
-let logger = require('morgan')
-let cookieParser = require('cookie-parser')
-let bodyParser = require('body-parser')
+import './models/db'
+import * as express from 'express'
+import * as path from 'path'
+import favicon from 'serve-favicon'
+import logger from 'morgan'
+import cookieParser from 'cookie-parser'
+import bodyParser from 'body-parser'
+import reactViews from 'express-react-views'
 
-let app = express()
+const app = express.default()
 
-// connect to mongodb instance
-let db = require('./models/db')
+// load route handlers
+import * as routes from './util/loader'
 
 // app setup
 app.set('views', path.join(__dirname, 'views'))
 app.set('view engine', 'jsx')
-app.engine('jsx', require('express-react-views').createEngine())
+app.engine('jsx', reactViews.createEngine())
 
 app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')))
 app.use(logger('dev'))
@@ -27,10 +29,10 @@ app.use(bodyParser.urlencoded({extended: false}))
 app.use(cookieParser())
 app.use(express.static(path.join(__dirname, 'public')))
 
-app.use('/', require('./routes/index'))
-app.use('/notes', require('./routes/notes'))
-app.use('/notebooks', require('./routes/notebooks'))
-app.use('/editor', require('./routes/editor'))
+app.use('/', routes.index)
+app.use('/notes', routes.notes)
+app.use('/notebooks', routes.notebooks)
+app.use('/editor', routes.editor)
 // app.use('/update', require('./routes/update'))
 // app.use('/preview', require('./routes/preview'))
 

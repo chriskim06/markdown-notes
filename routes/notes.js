@@ -3,10 +3,8 @@
  * @author Chris
  */
 
-import { doNext } from '../util/helpers'
+import { Note } from '../util/loader'
 import { Router } from 'express'
-import mongoose from 'mongoose'
-const Note = mongoose.model('Note')
 const router = Router()
 
 /**
@@ -14,9 +12,11 @@ const router = Router()
  */
 router.get('/', (req, res, next) => {
   Note.getNotes(0, 0, (err, data) => {
-    doNext(err, res, next, data, (response, after, results) => {
-      response.render('notes', {notes: results})
-    })
+    if (err) {
+      next(err)
+    } else {
+      res.render('notes', {notes: data})
+    }
   })
 })
 
@@ -29,8 +29,8 @@ router.post('/create', (req, res, next) => {
     content: req.body.note,
     updated: Date.now()
   })
-  note.persist(res, next, (response, after, results) => {
-    response.redirect('/notes')
+  note.persist(next, () => {
+    res.redirect('/notes')
   })
 })
 
@@ -39,14 +39,16 @@ router.post('/create', (req, res, next) => {
  */
 router.post('/update/:id', (req, res, next) => {
   Note.findOne({_id: req.params.id}, (err, data) => {
-    doNext(err, res, next, data, (response, after, results) => {
-      results.title = req.body.title
-      results.content = req.body.note
-      results.updated = Date.now()
-      results.persist(response, after, () => {
-        response.redirect('/notes')
+    if (err) {
+      next(err)
+    } else {
+      data.title = req.body.title
+      data.content = req.body.note
+      data.updated = Date.now()
+      data.persist(next, () => {
+        res.redirect('/notes')
       })
-    })
+    }
   })
 })
 
@@ -55,10 +57,12 @@ router.post('/update/:id', (req, res, next) => {
  */
 router.post('/delete/:id', (req, res, next) => {
   Note.findOneAndRemove({_id: req.params.id}, (err, data) => {
-    doNext(err, res, next, data, (response, after, results) => {
-      response.redirect('/notes')
-    })
+    if (err) {
+      next(err)
+    } else {
+      res.redirect('/notes')
+    }
   })
 })
 
-module.exports = router
+export default module.exports = router

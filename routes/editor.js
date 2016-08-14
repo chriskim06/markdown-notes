@@ -3,10 +3,8 @@
  * @author Chris
  */
 
-import { doNext } from '../util/helpers'
+import { Note } from '../util/loader'
 import { Router } from 'express'
-import mongoose from 'mongoose'
-const Note = mongoose.model('Note')
 const router = Router()
 
 /**
@@ -25,15 +23,17 @@ router.get('/add', (req, res, next) => {
 router.get('/update/:id', (req, res, next) => {
   let id = req.params.id
   Note.findOne({_id: id}, (err, data) => {
-    doNext(err, res, next, data, (response, after, results) => {
-      response.render('editor', {
+    if (err) {
+      next(err)
+    } else {
+      res.render('editor', {
         title: 'Update this note',
         action: '/notes/update/' + id,
-        name: results.title,
-        note: results.content
+        name: data.title,
+        note: data.content
       })
-    })
+    }
   })
 })
 
-module.exports = router
+export default module.exports = router

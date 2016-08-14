@@ -4,7 +4,6 @@
  */
 
 import mongoose from 'mongoose'
-import { doNext } from '../util/helpers'
 
 const noteSchema = new mongoose.Schema({
   title: String,
@@ -15,13 +14,16 @@ const noteSchema = new mongoose.Schema({
 
 /**
  * Common method for all Note instances
- * @param res
  * @param next
  * @param callback
  */
-noteSchema.methods.persist = function(res, next, callback) {
+noteSchema.methods.persist = function(next, callback) {
   this.save((err) => {
-    doNext(err, res, next, null, callback)
+    if (err) {
+      next(err)
+    } else {
+      callback()
+    }
   })
 }
 
