@@ -4,6 +4,7 @@
  */
 
 import React from 'react'
+import DeleteModal from './delete-modal'
 
 const style = {
   backgroundColor: '#5bc0de',
@@ -33,7 +34,7 @@ export default React.createClass({
                   <input id="notebookId" name="notebookId" type="hidden" value={props.notebookId} />
                   <p>Change the title of this notebook</p>
                   <div className="form-group">
-                    <input id="title" className="form-control" name="title" value="" placeholder={props.notebookName} />
+                    <input id="title" className="form-control" name="title" defaultValue={props.notebookName} placeholder={props.notebookName} />
                   </div>
                   <div className="form-group">
                     <input id="submit" className="btn btn-primary" name="submit" type="submit" value="Save" />
@@ -43,21 +44,7 @@ export default React.createClass({
             </div>
           </div>
         </div>
-        <div id={'delete-' + props.notebookId} className="modal fade" role="dialog">
-          <div className="modal-dialog">
-            <div className="modal-content">
-              <div className="modal-body">
-                <form acceptCharset="utf-8" action="/notebooks/delete" method="post">
-                  <input id="notebookId" name="notebookId" type="hidden" value={props.notebookId} />
-                  <p>Are you sure you want to delete the note '{props.notebookName}'</p>
-                  <div className="form-group">
-                    <input id="submit" className="btn btn-primary" name="submit" type="submit" value="Confirm" />
-                  </div>
-                </form>
-              </div>
-            </div>
-          </div>
-        </div>
+        <DeleteModal data={{id: props.notebookId, title: props.notebookName}} origin="notebooks" />
       </div>
     )
   }

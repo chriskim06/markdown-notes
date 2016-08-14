@@ -45,8 +45,8 @@ noteSchema.statics.getNotes = function(skip, limit, callback) {
   query.exec((err, results) => {
     let items = []
     results.forEach((note) => {
-      let condensed = note.content.substr(0, 75)
-      if (condensed.length === 75) {
+      let condensed = note.content.substr(0, 100)
+      if (condensed.length === 100) {
         condensed += '...'
       }
       let time = new Date(note.updated)

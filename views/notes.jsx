@@ -1,5 +1,5 @@
 /**
- * @fileoverview A component that represents a single notebook
+ * @fileoverview A component that displays notes
  * @author Chris
  */
 

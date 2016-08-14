@@ -23,7 +23,7 @@ app.set('view engine', 'jsx')
 app.engine('jsx', reactViews.createEngine())
 
 app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')))
-app.use(logger('dev'))
+// app.use(logger('dev'))
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended: false}))
 app.use(cookieParser())
@@ -33,7 +33,6 @@ app.use('/', routes.index)
 app.use('/notes', routes.notes)
 app.use('/notebooks', routes.notebooks)
 app.use('/editor', routes.editor)
-// app.use('/update', require('./routes/update'))
 // app.use('/preview', require('./routes/preview'))
 
 

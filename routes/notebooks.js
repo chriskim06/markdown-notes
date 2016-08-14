@@ -48,8 +48,8 @@ router.post('/edit', (req, res, next) => {
 /**
  * DELETE a notebook
  */
-router.post('/delete', (req, res, next) => {
-  Notebook.findOneAndRemove({_id: req.body.notebookId}, (err, data) => {
+router.post('/delete/:id', (req, res, next) => {
+  Notebook.findOneAndRemove({_id: req.params.id}, (err, data) => {
     if (err) {
       next(err)
     } else {
