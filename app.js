@@ -30,7 +30,7 @@ app.use(express.static(path.join(__dirname, 'public')))
 app.use('/', require('./routes/index'))
 app.use('/notes', require('./routes/notes'))
 app.use('/notebooks', require('./routes/notebooks'))
-// app.use('/create', require('./routes/create'))
+app.use('/editor', require('./routes/editor'))
 // app.use('/update', require('./routes/update'))
 // app.use('/preview', require('./routes/preview'))
 

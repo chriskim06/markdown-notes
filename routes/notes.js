@@ -30,7 +30,23 @@ router.post('/create', (req, res, next) => {
     updated: Date.now()
   })
   note.persist(res, next, (response, after, results) => {
-    response.redirect('/')
+    response.redirect('/notes')
+  })
+})
+
+/**
+ * UPDATE a note
+ */
+router.post('/update/:id', (req, res, next) => {
+  Note.findOne({_id: req.params.id}, (err, data) => {
+    doNext(err, res, next, data, (response, after, results) => {
+      results.title = req.body.title
+      results.content = req.body.note
+      results.updated = Date.now()
+      results.persist(response, after, () => {
+        response.redirect('/notes')
+      })
+    })
   })
 })
 

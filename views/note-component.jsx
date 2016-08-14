@@ -18,7 +18,7 @@ export default React.createClass({
               <p className="noteCondensed">{this.props.data.summary}</p>
             </div>
             <div className="panel-footer clearfix">
-              <a className="btn btn-default btn-sm actions" title="Edit" href={'/update/' + this.props.data.id}>
+              <a className="btn btn-default btn-sm actions" title="Edit" href={'/editor/update/' + this.props.data.id}>
                 <i className="fa fa-pencil-square-o fa-lg" aria-hidden="true" />&nbsp;Edit
               </a>&nbsp;&nbsp;&nbsp;
               <a className="btn btn-default btn-sm actions" title="View" href={'/preview/' + this.props.data.id}>

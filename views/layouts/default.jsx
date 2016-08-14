@@ -18,6 +18,7 @@ export default React.createClass({
           <script src="/javascripts/simplemde.min.js"></script>
           <script src="/javascripts/jquery.js"></script>
           <script src="/javascripts/bootstrap.min.js"></script>
+          <script src="/javascripts/simplemde-helpers.js"></script>
         </head>
         <body>
           <div id="wrapper">
@@ -30,7 +31,7 @@ export default React.createClass({
                 </li>
                 <li><a href="/"><i className="fa fa-book fa-lg" aria-hidden="true" />&nbsp;&nbsp;Notebooks</a></li>
                 <li><a href="/notes"><i className="fa fa-file-text fa-lg" aria-hidden="true" />&nbsp;&nbsp;Notes</a></li>
-                <li><a href="/create"><i className="fa fa-plus-square fa-lg" aria-hidden="true" />&nbsp;&nbsp;Add a new note</a></li>
+                <li><a href="/editor/add"><i className="fa fa-plus-square fa-lg" aria-hidden="true" />&nbsp;&nbsp;Add a new note</a></li>
               </ul>
             </div>
             <div id="page-content-wrapper">
