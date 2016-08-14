@@ -14,15 +14,16 @@ const noteSchema = new mongoose.Schema({
 
 /**
  * Common method for all Note instances
+ * @param res
+ * @param path
  * @param next
- * @param callback
  */
-noteSchema.methods.persist = function(next, callback) {
+noteSchema.methods.persist = function(res, path, next) {
   this.save((err) => {
     if (err) {
       next(err)
     } else {
-      callback()
+      res.redirect(path)
     }
   })
 }

@@ -28,9 +28,7 @@ router.post('/create', (req, res, next) => {
     name: req.body.title,
     notes: []
   })
-  notebook.persist(next, () => {
-    res.redirect('/')
-  })
+  notebook.persist(res, '/', next)
 })
 
 /**
@@ -42,9 +40,7 @@ router.post('/edit', (req, res, next) => {
       next(err)
     } else {
       data.name = req.body.title
-      data.persist(next, () => {
-        res.redirect('/')
-      })
+      data.persist(res, '/', next)
     }
   })
 })

@@ -29,9 +29,7 @@ router.post('/create', (req, res, next) => {
     content: req.body.note,
     updated: Date.now()
   })
-  note.persist(next, () => {
-    res.redirect('/notes')
-  })
+  note.persist(res, '/notes', next)
 })
 
 /**
@@ -45,9 +43,7 @@ router.post('/update/:id', (req, res, next) => {
       data.title = req.body.title
       data.content = req.body.note
       data.updated = Date.now()
-      data.persist(next, () => {
-        res.redirect('/notes')
-      })
+      data.persist(res, '/notes', next)
     }
   })
 })

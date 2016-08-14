@@ -12,15 +12,16 @@ const notebookSchema = new mongoose.Schema({
 
 /**
  * Common method for all Notebook instances
+ * @param res
+ * @param path
  * @param next
- * @param callback
  */
-notebookSchema.methods.persist = function(next, callback) {
+notebookSchema.methods.persist = function(res, path, next) {
   this.save((err) => {
     if (err) {
       next(err)
     } else {
-      callback()
+      res.redirect(path)
     }
   })
 }
