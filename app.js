@@ -68,8 +68,4 @@ function handleError(err, res, data) {
   })
 }
 
-app.listen(process.env.PORT || '3000', function() {
-  console.log('App started')
-})
-
 module.exports = app
