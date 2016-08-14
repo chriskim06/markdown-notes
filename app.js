@@ -3,17 +3,17 @@
  * @author Chris
  */
 
-var express = require('express')
-var path = require('path')
-var favicon = require('serve-favicon')
-var logger = require('morgan')
-var cookieParser = require('cookie-parser')
-var bodyParser = require('body-parser')
+let express = require('express')
+let path = require('path')
+let favicon = require('serve-favicon')
+let logger = require('morgan')
+let cookieParser = require('cookie-parser')
+let bodyParser = require('body-parser')
 
-var app = express()
+let app = express()
 
 // connect to mongodb instance
-var db = require('./db')
+let db = require('./models/db')
 
 // app setup
 app.set('views', path.join(__dirname, 'views'))
@@ -40,25 +40,25 @@ app.use('/notebooks', require('./routes/notebooks'))
  */
 
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
-  var err = new Error('Not Found')
+app.use((req, res, next) => {
+  let err = new Error('Not Found')
   err.status = 404
   next(err)
 });
 
 // print stacktrace in dev but not in production
 if (app.get('env') === 'development') {
-  app.use(function(err, req, res, next) {
+  app.use((err, req, res, next) => {
     handleError(err, res, err.stack)
   })
 } else {
-  app.use(function(err, req, res, next) {
+  app.use((err, req, res, next) => {
     handleError(err, res, '')
   })
 }
 
 // Function that renders the error page
-function handleError(err, res, data) {
+const handleError = (err, res, data) => {
   console.error(err.stack)
   res.status(err.status || 500)
   res.render('error', {

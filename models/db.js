@@ -4,8 +4,8 @@
  */
 
 // Import the global schema definitions defined in the models
-import './models/Note'
-import './models/Notebook'
+import './Note'
+import './Notebook'
 
 // Connect to the database
 import mongoose from 'mongoose'
