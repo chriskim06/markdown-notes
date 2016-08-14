@@ -10,7 +10,7 @@ import AddNotebook from './add-notebook'
 
 export default React.createClass({
   render() {
-    var content = this.props.notebookNames.map((notebook) => {
+    let content = this.props.notebookNames.map((notebook) => {
       return <NotebookComponent key={notebook.id} data={notebook} />
     })
     return (
