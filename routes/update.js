@@ -7,7 +7,7 @@ var express = require('express');
 var router = express.Router();
 
 var mongoose = require('mongoose');
-var Note = mongoose.model('Notes');
+var Note = mongoose.model('Note');
 
 router.get('/:id', function(req, res, next) {
   var id = req.params.id;

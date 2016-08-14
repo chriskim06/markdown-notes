@@ -1,72 +1,71 @@
-var express = require('express');
-var path = require('path');
-var favicon = require('serve-favicon');
-var logger = require('morgan');
-var cookieParser = require('cookie-parser');
-var bodyParser = require('body-parser');
+/**
+ * @fileoverview Entry point to notes app
+ * @author Chris
+ */
 
-var app = express();
+let express = require('express')
+let path = require('path')
+let favicon = require('serve-favicon')
+let logger = require('morgan')
+let cookieParser = require('cookie-parser')
+let bodyParser = require('body-parser')
+
+let app = express()
 
 // connect to mongodb instance
-require('./note');
-require('./notebook');
-var mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost/notes');
+let db = require('./models/db')
 
-var index = require('./routes/index');
-var create = require('./routes/create');
-var notes = require('./routes/notes');
-var update = require('./routes/update');
-var preview = require('./routes/preview');
+// app setup
+app.set('views', path.join(__dirname, 'views'))
+app.set('view engine', 'jsx')
+app.engine('jsx', require('express-react-views').createEngine())
 
-// view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'jade');
+app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')))
+app.use(logger('dev'))
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({extended: false}))
+app.use(cookieParser())
+app.use(express.static(path.join(__dirname, 'public')))
 
-// uncomment after placing your favicon in /public
-app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
-app.use(logger('dev'));
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: false}));
-app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
+app.use('/', require('./routes/index'))
+app.use('/notes', require('./routes/notes'))
+app.use('/notebooks', require('./routes/notebooks'))
+app.use('/editor', require('./routes/editor'))
+// app.use('/update', require('./routes/update'))
+// app.use('/preview', require('./routes/preview'))
 
-app.use('/', index);
-app.use('/create', create);
-app.use('/notes', notes);
-app.use('/update', update);
-app.use('/preview', preview);
+
+/**
+ * ERROR HANDLING
+ */
 
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
-  var err = new Error('Not Found');
-  err.status = 404;
-  next(err);
+app.use((req, res, next) => {
+  let err = new Error('Not Found')
+  err.status = 404
+  next(err)
 });
 
-// error handlers
-
-// development error handler
-// will print stacktrace
+// print stacktrace in dev but not in production
 if (app.get('env') === 'development') {
-  app.use(function(err, req, res, next) {
-    res.status(err.status || 500);
-    res.render('error', {
-      message: err.message,
-      error: err
-    });
-  });
+  app.use((err, req, res, next) => {
+    handleError(err, res, err.stack)
+  })
+} else {
+  app.use((err, req, res, next) => {
+    handleError(err, res, '')
+  })
 }
 
-// production error handler
-// no stacktraces leaked to user
-app.use(function(err, req, res, next) {
-  res.status(err.status || 500);
+// Function that renders the error page
+const handleError = (err, res, data) => {
+  console.error(err.stack)
+  res.status(err.status || 500)
   res.render('error', {
+    statusCode: res.statusCode,
     message: err.message,
-    error: {}
-  });
-});
+    err: data
+  })
+}
 
-
-module.exports = app;
+module.exports = app

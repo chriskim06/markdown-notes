@@ -1,48 +1,64 @@
 /**
- * @fileoverview Get all/delete notes
+ * @fileoverview Create, get, and delete notes
  * @author Chris
  */
 
-var express = require('express');
-var router = express.Router();
+import { doNext } from '../util/helpers'
+import { Router } from 'express'
+import mongoose from 'mongoose'
+const Note = mongoose.model('Note')
+const router = Router()
 
-var mongoose = require('mongoose');
-var Note = mongoose.model('Notes');
+/**
+ * GET all notes
+ */
+router.get('/', (req, res, next) => {
+  Note.getNotes(0, 0, (err, data) => {
+    doNext(err, res, next, data, (response, after, results) => {
+      response.render('notes', {notes: results})
+    })
+  })
+})
 
-router.get('/', function(req, res, next) {
-  Note.find({}, function(err, data) {
-    if (err) {
-      res.redirect('/');
-    } else {
-      var items = [];
-      data.forEach(function(note) {
-        var condensed = note.content.substr(0, 75);
-        if (condensed.length === 75) {
-          condensed += '...';
-        }
-        var time = new Date(note.updated);
-        items.push({
-          id: note._id,
-          title: note.title,
-          summary: condensed,
-          content: note.content,
-          edited: time.toLocaleString()
-        });
-      });
-      items.reverse();
+/**
+ * CREATE a new note
+ */
+router.post('/create', (req, res, next) => {
+  let note = new Note({
+    title: req.body.title,
+    content: req.body.note,
+    updated: Date.now()
+  })
+  note.persist(res, next, (response, after, results) => {
+    response.redirect('/notes')
+  })
+})
 
-      res.render('notes', { notes: items });
-    }
-  });
-});
+/**
+ * UPDATE a note
+ */
+router.post('/update/:id', (req, res, next) => {
+  Note.findOne({_id: req.params.id}, (err, data) => {
+    doNext(err, res, next, data, (response, after, results) => {
+      results.title = req.body.title
+      results.content = req.body.note
+      results.updated = Date.now()
+      results.persist(response, after, () => {
+        response.redirect('/notes')
+      })
+    })
+  })
+})
 
-router.post('/delete/:id', function(req, res, next) {
-  var id = req.params.id;
-  if (id) {
-    Note.findOneAndRemove({ _id: id }, function(err, data) {
-      res.redirect('/notes');
-    });
-  }
-});
+/**
+ * DELETE a note
+ */
+router.post('/delete/:id', (req, res, next) => {
+  Note.findOneAndRemove({_id: req.params.id}, (err, data) => {
+    doNext(err, res, next, data, (response, after, results) => {
+      response.redirect('/notes')
+    })
+  })
+})
 
-module.exports = router;
+module.exports = router
