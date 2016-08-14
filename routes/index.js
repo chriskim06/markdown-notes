@@ -3,9 +3,6 @@
  * @author Chris
  */
 
-// var router = require('express').Router();
-// var Notebook = require('mongoose').model('Notebook');
-// var helpers = require('../util/helpers');
 import { doNext } from '../util/helpers'
 import { Router } from 'express'
 import mongoose from 'mongoose'
