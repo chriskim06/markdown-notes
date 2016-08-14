@@ -23,11 +23,12 @@ router.get('/add', (req, res, next) => {
  * GET edit page
  */
 router.get('/update/:id', (req, res, next) => {
-  Note.findOne({_id: req.params.id}, (err, data) => {
+  let id = req.params.id
+  Note.findOne({_id: id}, (err, data) => {
     doNext(err, res, next, data, (response, after, results) => {
       response.render('editor', {
         title: 'Update this note',
-        action: '/notes/update/' + req.params.id,
+        action: '/notes/update/' + id,
         name: results.title,
         note: results.content
       })
@@ -35,4 +36,4 @@ router.get('/update/:id', (req, res, next) => {
   })
 })
 
-module.exports = router;
+module.exports = router
