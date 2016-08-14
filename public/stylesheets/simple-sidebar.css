@@ -112,6 +112,10 @@ button.notebooks {
     margin: 0 0 10px 10px;
 }
 
+.nb-actions{
+    margin-right: 15px;
+}
+
 @media(min-width:768px) {
     #wrapper {
         padding-left: 250px;

@@ -17,15 +17,15 @@ export default React.createClass({
     let props = this.props
     return (
       <div className="panel-footer clearfix">
-        <button className="btn btn-info btn-sm" type="button" data-toggle="modal" data-target={'#edit-' + props.notebookId}>
+        <button className="btn btn-info btn-sm nb-actions" type="button" data-toggle="modal" data-target={'#edit-' + props.notebookId}>
           <i className="fa fa-pencil-square-o fa-lg" aria-hidden="true" />&nbsp;Edit
-        </button>&nbsp;&nbsp;&nbsp;
-        <a className="btn btn-default btn-sm" title="Notes" href={'#' + props.notebookId} style={style}>
+        </button>
+        <a className="btn btn-default btn-sm nb-actions" title="Notes" href={'#' + props.notebookId} style={style}>
           <i className="fa fa-plus-square fa-lg" aria-hidden="true" />&nbsp;Notes
-        </a>&nbsp;&nbsp;&nbsp;
-        <button className="btn btn-info btn-sm" type="button" data-toggle="modal" data-target={'#delete-' + props.notebookId}>
+        </a>
+        <button className="btn btn-info btn-sm nb-actions" type="button" data-toggle="modal" data-target={'#delete-' + props.notebookId}>
           <i className="fa fa-trash-o fa-lg" aria-hidden="true" />&nbsp;Delete
-        </button>&nbsp;&nbsp;&nbsp;
+        </button>
         <div id={'edit-' + props.notebookId} className="modal fade" role="dialog">
           <div className="modal-dialog">
             <div className="modal-content">
