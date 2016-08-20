@@ -6,7 +6,7 @@
 import mongoose from 'mongoose'
 
 const noteSchema = new mongoose.Schema({
-  title: String,
+  title: {type: String, unique: true},
   content: String,
   notebook: String,
   updated: {type: Date, default: Date.now()}

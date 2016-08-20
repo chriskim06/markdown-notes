@@ -1,5 +1,5 @@
 /**
- * @fileoverview
+ * @fileoverview The markdown preview of a note
  * @author Chris
  */
 

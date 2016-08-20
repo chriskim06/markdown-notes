@@ -20,7 +20,9 @@ export default React.createClass({
       <div>
         <div className="panel panel-default">
           <div className="panel-heading clearfix">
-            <h3 className="panel-title pull-left">{'(' + data.edited + ') ' + data.title}</h3>
+            <h3 className="panel-title pull-left">
+              {'(' + data.edited + ') '}<span className="note-title">{data.title}</span>
+            </h3>
           </div>
           <div className="panel-body">
             <p className="noteCondensed">{data.summary}</p>

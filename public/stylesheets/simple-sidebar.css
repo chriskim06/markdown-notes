@@ -112,8 +112,12 @@ button.notebooks {
     margin: 0 0 10px 10px;
 }
 
-.nb-actions{
+.nb-actions {
     margin-right: 15px;
+}
+
+.note-title {
+    font-weight: bold;
 }
 
 @media(min-width:768px) {

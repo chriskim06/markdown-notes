@@ -4,15 +4,15 @@
  */
 
 import './models/db'
-import * as express from 'express'
-import * as path from 'path'
+import Express from 'express'
+import path from 'path'
 import favicon from 'serve-favicon'
 import logger from 'morgan'
 import cookieParser from 'cookie-parser'
 import bodyParser from 'body-parser'
 import reactViews from 'express-react-views'
 
-const app = express.default()
+const app = new Express()
 
 // load route handlers
 import * as routes from './util/loader'
@@ -27,7 +27,7 @@ app.use(logger('dev'))
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended: false}))
 app.use(cookieParser())
-app.use(express.static(path.join(__dirname, 'public')))
+app.use(Express.static(path.join(__dirname, 'public')))
 
 app.use('/', routes.index)
 app.use('/notes', routes.notes)
