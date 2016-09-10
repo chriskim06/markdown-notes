@@ -11,7 +11,7 @@ const router = Router()
  * GET all notes
  */
 router.get('/', (req, res, next) => {
-  Note.getNotes(0, 0, (err, data) => {
+  Note.getAllNotes(0, 0, (err, data) => {
     if (err) {
       next(err)
     } else {

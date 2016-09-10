@@ -34,7 +34,7 @@ noteSchema.methods.persist = function(res, path, next) {
  * @param limit
  * @param callback
  */
-noteSchema.statics.getNotes = function(skip, limit, callback) {
+noteSchema.statics.getAllNotes = function(skip, limit, callback) {
   let query = this.find({})
   if (skip !== null) {
     query = query.skip(skip)
