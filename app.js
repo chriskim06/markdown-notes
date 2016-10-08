@@ -23,7 +23,9 @@ client.on('error', (err) => {
   console.log(`Error: ${err}`)
 })
 process.on('SIGINT', () => {
-  client.quit()
+  console.log('Shutting down redis...')
+  client.shutdown()
+  process.exit()
 })
 
 // load route handlers
