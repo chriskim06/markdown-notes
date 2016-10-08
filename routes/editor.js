@@ -36,14 +36,13 @@ router.get('/add', (req, res, next) => {
  * GET edit page
  */
 router.get('/update/:id', (req, res, next) => {
-  let key = req.params.id
-  Note.getNote(key, (err, data) => {
+  Note.getNote(req.params.id, (err, data) => {
     if (err) {
       next(err)
     } else {
       res.render('editor', {
         title: 'Update this note',
-        action: '/notes/update/' + key,
+        action: '/notes/update/' + req.params.id,
         name: data.title,
         note: data.content
       })
