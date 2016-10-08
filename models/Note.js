@@ -4,12 +4,12 @@
  */
 
 import client from './db'
-import shortid from 'shortid'
+import shortId from 'shortid'
 
 export default class Note {
 
   constructor(title, content, notebook) {
-    this.id = shortid.generate()
+    this.id = shortId.generate()
     this.title = title
     this.content = content
     this.notebook = notebook
