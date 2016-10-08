@@ -11,7 +11,7 @@ const router = Router()
  * GET all notebooks
  */
 router.get('/', (req, res, next) => {
-  Notebook.getAllNotebooks((err, data) => {
+  Notebook.getAll((err, data) => {
     if (err) {
       next(err)
     } else {
@@ -38,7 +38,7 @@ router.post('/create', (req, res, next) => {
  * UPDATE an existing notebook
  */
 router.post('/edit', (req, res, next) => {
-  Notebook.getNotebook(req.body.notebookId, (err, data) => {
+  Notebook.get(req.body.notebookId, (err, data) => {
     if (err) {
       next(err)
     } else {

@@ -26,13 +26,13 @@ export default class Notebook {
     })
   }
 
-  static getNotebook(key, callback) {
+  static get(key, callback) {
     client.hget('notebooks', key, (err, reply) => {
       callback(err, JSON.parse(reply))
     })
   }
 
-  static getAllNotebooks(callback) {
+  static getAll(callback) {
     client.hgetall('notebooks', (err, reply) => {
       let notebooks = []
       if (reply) {

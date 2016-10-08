@@ -12,7 +12,7 @@ const router = Router()
  * GET create page
  */
 router.get('/add', (req, res, next) => {
-  Notebook.getAllNotebooks((err, data) => {
+  Notebook.getAll((err, data) => {
     if (err) {
       next(err)
     } else {
@@ -36,7 +36,7 @@ router.get('/add', (req, res, next) => {
  * GET edit page
  */
 router.get('/update/:id', (req, res, next) => {
-  Note.getNote(req.params.id, (err, data) => {
+  Note.get(req.params.id, (err, data) => {
     if (err) {
       next(err)
     } else {

@@ -28,13 +28,13 @@ export default class Note {
     })
   }
 
-  static getNote(key, callback) {
+  static get(key, callback) {
     client.hget('notes', key, (err, reply) => {
       callback(err, JSON.parse(reply))
     })
   }
 
-  static getAllNotes(callback) {
+  static getAll(callback) {
     client.hgetall('notes', (err, reply) => {
       let notes = []
       if (reply) {

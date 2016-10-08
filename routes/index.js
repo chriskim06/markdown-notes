@@ -11,7 +11,7 @@ const router = Router()
  * GET all notebooks (currently the default page)
  */
 router.get('/', (req, res, next) => {
-  Notebook.getAllNotebooks((err, data) => {
+  Notebook.getAll((err, data) => {
     if (err) {
       next(err)
     } else {

@@ -11,7 +11,7 @@ const router = Router()
  * GET all notes
  */
 router.get('/', (req, res, next) => {
-  Note.getAllNotes((err, data) => {
+  Note.getAll((err, data) => {
     if (err) {
       next(err)
     } else {
@@ -38,7 +38,7 @@ router.post('/create', (req, res, next) => {
  * UPDATE a note
  */
 router.post('/update/:id', (req, res, next) => {
-  Note.getNote(req.params.id, (err, data) => {
+  Note.get(req.params.id, (err, data) => {
     if (err) {
       next(err)
     } else {
