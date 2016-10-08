@@ -22,10 +22,23 @@ client.on('connect', () => {
 client.on('error', (err) => {
   console.log(`Error: ${err}`)
 })
-process.on('SIGINT', () => {
+
+let shutdown = (callback) => {
   console.log('Shutting down redis...')
   client.shutdown()
-  process.exit()
+  callback()
+}
+
+process.on('SIGINT', () => {
+  shutdown(() => {
+    process.exit()
+  })
+})
+process.once('SIGUSR2', () => {
+  console.log('nodemon restart')
+  shutdown(() => {
+    process.kill(process.pid, 'SIGUSR2')
+  })
 })
 
 // load route handlers
