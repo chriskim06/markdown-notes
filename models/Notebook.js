@@ -14,14 +14,6 @@ export default class Notebook {
     this.notes = notes
   }
 
-  setName(name) {
-    this.name = name
-  }
-
-  addNote(note) {
-    this.notes.push(note)
-  }
-
   static persist(notebook, callback) {
     client.hset('notebooks', [`${notebook.id}`, JSON.stringify(notebook)], (err, reply) => {
       callback(err, reply)

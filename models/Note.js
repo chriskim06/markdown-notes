@@ -16,21 +16,6 @@ export default class Note {
     this.updated = Date.now()
   }
 
-  setTitle(title) {
-    this.title = title
-    this.updated = Date.now()
-  }
-
-  setContent(content) {
-    this.content = content
-    this.updated = Date.now()
-  }
-
-  setNotebook(notebook) {
-    this.notebook = notebook
-    this.updated = Date.now()
-  }
-
   static persist(note, callback) {
     client.hset('notes', [`${note.id}`, JSON.stringify(note)], (err, reply) => {
       callback(err, reply)
