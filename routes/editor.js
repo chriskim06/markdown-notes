@@ -3,7 +3,8 @@
  * @author Chris
  */
 
-import { Note } from '../util/loader'
+import Note from '../models/Note'
+import Notebook from '../models/Notebook'
 import { Router } from 'express'
 const router = Router()
 
@@ -11,9 +12,23 @@ const router = Router()
  * GET create page
  */
 router.get('/add', (req, res, next) => {
-  res.render('editor', {
-    title: 'Add a new note!',
-    action: '/notes/create'
+  Notebook.getAllNotebooks((err, data) => {
+    if (err) {
+      next(err)
+    } else {
+      let notebookOptions = []
+      for (let obj in data) {
+        if (data.hasOwnProperty(obj)) {
+          // let notebook = data[obj]
+          notebookOptions.push(data[obj])
+        }
+      }
+      res.render('editor', {
+        title: 'Add a new note!',
+        action: '/notes/create',
+        notebooks: notebookOptions
+      })
+    }
   })
 })
 
@@ -21,14 +36,14 @@ router.get('/add', (req, res, next) => {
  * GET edit page
  */
 router.get('/update/:id', (req, res, next) => {
-  let id = req.params.id
-  Note.findOne({_id: id}, (err, data) => {
+  let key = req.params.id
+  Note.getNote(key, (err, data) => {
     if (err) {
       next(err)
     } else {
       res.render('editor', {
         title: 'Update this note',
-        action: '/notes/update/' + id,
+        action: '/notes/update/' + key,
         name: data.title,
         note: data.content
       })

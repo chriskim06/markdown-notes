@@ -3,7 +3,7 @@
  * @author Chris
  */
 
-import { Notebook } from '../util/loader'
+import Notebook from '../models/Notebook'
 import { Router } from 'express'
 const router = Router()
 
@@ -11,7 +11,7 @@ const router = Router()
  * GET all notebooks
  */
 router.get('/', (req, res, next) => {
-  Notebook.getNotebooks(0, 0, (err, data) => {
+  Notebook.getAllNotebooks((err, data) => {
     if (err) {
       next(err)
     } else {
@@ -24,23 +24,32 @@ router.get('/', (req, res, next) => {
  * CREATE a new notebook
  */
 router.post('/create', (req, res, next) => {
-  let notebook = new Notebook({
-    name: req.body.title,
-    notes: []
+  let notebook = new Notebook(req.body.title, [])
+  Notebook.persist(notebook, (err, reply) => {
+    if (err) {
+      next(err)
+    } else {
+      res.redirect('/')
+    }
   })
-  notebook.persist(res, '/', next)
 })
 
 /**
  * UPDATE an existing notebook
  */
 router.post('/edit', (req, res, next) => {
-  Notebook.findOne({_id: req.body.notebookId}, (err, data) => {
+  Notebook.getNotebook(req.body.notebookId, (err, data) => {
     if (err) {
       next(err)
     } else {
       data.name = req.body.title
-      data.persist(res, '/', next)
+      Notebook.persist(data, (err, reply) => {
+        if (err) {
+          next(err)
+        } else {
+          res.redirect('/')
+        }
+      })
     }
   })
 })
@@ -49,7 +58,7 @@ router.post('/edit', (req, res, next) => {
  * DELETE a notebook
  */
 router.post('/delete/:id', (req, res, next) => {
-  Notebook.findOneAndRemove({_id: req.params.id}, (err, data) => {
+  Notebook.remove(req.params.id, (err, data) => {
     if (err) {
       next(err)
     } else {

@@ -3,53 +3,60 @@
  * @author Chris
  */
 
-import mongoose from 'mongoose'
+import client from './db'
+import shortid from 'shortid'
 
-const notebookSchema = new mongoose.Schema({
-  name: {type: String, unique: true},
-  notes: [mongoose.Schema.Types.ObjectId]
-})
+export default class Notebook {
 
-/**
- * Common method for all Notebook instances
- * @param res
- * @param path
- * @param next
- */
-notebookSchema.methods.persist = function(res, path, next) {
-  this.save((err) => {
-    if (err) {
-      next(err)
-    } else {
-      res.redirect(path)
-    }
-  })
-}
-
-/**
- * Static method for getting an array of notes
- * @param skip
- * @param limit
- * @param callback
- */
-notebookSchema.statics.getNotebooks = function(skip, limit, callback) {
-  let query = this.find({})
-  if (skip !== null) {
-    query = query.skip(skip)
+  constructor(name, notes = []) {
+    this.id = shortid.generate()
+    this.name = name
+    this.notes = notes
   }
-  if (limit > 0) {
-    query = query.limit(limit)
+
+  setName(name) {
+    this.name = name
   }
-  query.exec((err, results) => {
-    let notebooks = []
-    results.forEach((notebook) => {
-      notebooks.push({
-        id: notebook._id,
-        name: notebook.name
-      })
+
+  addNote(note) {
+    this.notes.push(note)
+  }
+
+  static persist(notebook, callback) {
+    client.hset('notebooks', [`${notebook.id}`, JSON.stringify(notebook)], (err, reply) => {
+      callback(err, reply)
     })
-    callback(err, notebooks)
-  })
-}
+  }
 
-mongoose.model('Notebook', notebookSchema)
+  static remove(key, callback) {
+    client.hdel('notebooks', key, (err, reply) => {
+      callback(err, reply)
+    })
+  }
+
+  static getNotebook(key, callback) {
+    client.hget('notebooks', key, (err, reply) => {
+      callback(err, JSON.parse(reply))
+    })
+  }
+
+  static getAllNotebooks(callback) {
+    client.hgetall('notebooks', (err, reply) => {
+      let notebooks = []
+      if (reply) {
+        // let notebookObjects = JSON.parse(reply)
+        for (let obj in reply) {
+          if (reply.hasOwnProperty(obj)) {
+            let notebook = JSON.parse(reply[obj])
+            notebooks.push({
+              id: notebook.id,
+              name: notebook.name
+            })
+          }
+        }
+      }
+      callback(err, notebooks)
+    })
+  }
+
+}

@@ -3,7 +3,6 @@
  * @author Chris
  */
 
-import './models/db'
 import Express from 'express'
 import path from 'path'
 import favicon from 'serve-favicon'
@@ -14,6 +13,19 @@ import reactViews from 'express-react-views'
 
 const app = new Express()
 
+// start db
+import client from './models/db'
+
+client.on('connect', () => {
+  console.log('Connected')
+})
+client.on('error', (err) => {
+  console.log(`Error: ${err}`)
+})
+process.on('SIGINT', () => {
+  client.quit()
+})
+
 // load route handlers
 import * as routes from './util/loader'
 
@@ -23,7 +35,7 @@ app.set('view engine', 'jsx')
 app.engine('jsx', reactViews.createEngine())
 
 app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')))
-app.use(logger('dev'))
+// app.use(logger('dev'))
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended: false}))
 app.use(cookieParser())

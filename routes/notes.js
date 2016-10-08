@@ -3,7 +3,7 @@
  * @author Chris
  */
 
-import { Note } from '../util/loader'
+import Note from '../models/Note'
 import { Router } from 'express'
 const router = Router()
 
@@ -11,7 +11,7 @@ const router = Router()
  * GET all notes
  */
 router.get('/', (req, res, next) => {
-  Note.getAllNotes(0, 0, (err, data) => {
+  Note.getAllNotes((err, data) => {
     if (err) {
       next(err)
     } else {
@@ -24,26 +24,34 @@ router.get('/', (req, res, next) => {
  * CREATE a new note
  */
 router.post('/create', (req, res, next) => {
-  let note = new Note({
-    title: req.body.title,
-    content: req.body.note,
-    updated: Date.now()
+  let note = new Note(req.body.title, req.body.note, null)
+  Note.persist(note, (err, reply) => {
+    if (err) {
+      next(err)
+    } else {
+      res.redirect('/notes')
+    }
   })
-  note.persist(res, '/notes', next)
 })
 
 /**
  * UPDATE a note
  */
 router.post('/update/:id', (req, res, next) => {
-  Note.findOne({_id: req.params.id}, (err, data) => {
+  Note.getNote(req.params.id, (err, data) => {
     if (err) {
       next(err)
     } else {
       data.title = req.body.title
       data.content = req.body.note
       data.updated = Date.now()
-      data.persist(res, '/notes', next)
+      Note.persist(data, (err, reply) => {
+        if (err) {
+          next(err)
+        } else {
+          res.redirect('/notes')
+        }
+      })
     }
   })
 })
@@ -52,7 +60,7 @@ router.post('/update/:id', (req, res, next) => {
  * DELETE a note
  */
 router.post('/delete/:id', (req, res, next) => {
-  Note.findOneAndRemove({_id: req.params.id}, (err, data) => {
+  Note.remove(req.params.id, (err, data) => {
     if (err) {
       next(err)
     } else {
