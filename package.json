@@ -14,14 +14,17 @@
     "babel": "npm run resources && npm run out-models && npm run out-routes && npm run out-util && npm run out-app"
   },
   "dependencies": {
+    "babel-cli": "^6.14.0",
+    "babel-core": "^6.14.0",
+    "babel-preset-es2015": "^6.14.0",
     "body-parser": "~1.13.2",
     "cookie-parser": "~1.3.5",
     "debug": "~2.2.0",
     "express": "^4.13.4",
     "express-react-views": "^0.10.2",
-    "mongoose": "^4.4.12",
+    "mongoose": "^4.6.0",
     "morgan": "~1.6.1",
-    "react": "^15.1.0",
+    "react": "^15.3.1",
     "serve-favicon": "~2.3.0",
     "simplemde": "^1.10.1"
   },
@@ -29,6 +32,8 @@
     "babel-cli": "^6.11.4",
     "babel-core": "^6.13.2",
     "babel-preset-es2015": "^6.13.2",
-    "babel-preset-react": "^6.11.1"
+    "babel-preset-react": "^6.11.1",
+    "chai": "^3.5.0",
+    "mocha": "^3.1.0"
   }
 }
