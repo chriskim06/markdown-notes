@@ -1,5 +1,5 @@
 /**
- * @fileoverview Schema definition for notebooks
+ * @fileoverview Notebook definition and methods
  * @author Chris
  */
 
@@ -26,6 +26,17 @@ export default class Notebook {
     })
   }
 
+  static update(key, name, callback) {
+    Notebook.get(key, (err, data) => {
+      if (err) {
+        callback(err)
+      } else {
+        data.name = name
+        Notebook.persist(data, callback)
+      }
+    })
+  }
+
   static get(key, callback) {
     client.hget('notebooks', key, (err, reply) => {
       callback(err, JSON.parse(reply))
@@ -36,7 +47,6 @@ export default class Notebook {
     client.hgetall('notebooks', (err, reply) => {
       let notebooks = []
       if (reply) {
-        // let notebookObjects = JSON.parse(reply)
         for (let obj in reply) {
           if (reply.hasOwnProperty(obj)) {
             let notebook = JSON.parse(reply[obj])

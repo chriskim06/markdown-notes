@@ -1,5 +1,5 @@
 /**
- * @fileoverview Schema definition for notes
+ * @fileoverview Note definition and methods
  * @author Chris
  */
 
@@ -25,6 +25,19 @@ export default class Note {
   static remove(key, callback) {
     client.hdel('notes', key, (err, reply) => {
       callback(err, reply)
+    })
+  }
+
+  static update(key, title, content, callback) {
+    Note.get(key, (err, data) => {
+      if (err) {
+        callback(err)
+      } else {
+        data.title = title
+        data.content = content
+        data.updated = Date.now()
+        Note.persist(data, callback)
+      }
     })
   }
 

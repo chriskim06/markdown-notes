@@ -38,20 +38,11 @@ router.post('/create', (req, res, next) => {
  * UPDATE a note
  */
 router.post('/update/:id', (req, res, next) => {
-  Note.get(req.params.id, (err, data) => {
+  Note.update(req.params.id, req.body.title, req.body.note, (err, data) => {
     if (err) {
       next(err)
     } else {
-      data.title = req.body.title
-      data.content = req.body.note
-      data.updated = Date.now()
-      Note.persist(data, (err, reply) => {
-        if (err) {
-          next(err)
-        } else {
-          res.redirect('/notes')
-        }
-      })
+      res.redirect('/notes')
     }
   })
 })

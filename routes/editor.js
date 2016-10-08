@@ -19,7 +19,6 @@ router.get('/add', (req, res, next) => {
       let notebookOptions = []
       for (let obj in data) {
         if (data.hasOwnProperty(obj)) {
-          // let notebook = data[obj]
           notebookOptions.push(data[obj])
         }
       }

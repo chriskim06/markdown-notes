@@ -38,18 +38,11 @@ router.post('/create', (req, res, next) => {
  * UPDATE an existing notebook
  */
 router.post('/edit', (req, res, next) => {
-  Notebook.get(req.body.notebookId, (err, data) => {
+  Notebook.update(req.body.notebookId, req.body.title, (err, reply) => {
     if (err) {
       next(err)
     } else {
-      data.name = req.body.title
-      Notebook.persist(data, (err, reply) => {
-        if (err) {
-          next(err)
-        } else {
-          res.redirect('/')
-        }
-      })
+      res.redirect('/')
     }
   })
 })
