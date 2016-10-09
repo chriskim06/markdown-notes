@@ -10,7 +10,7 @@ import DefaultLayout from './layouts/default'
 export default React.createClass({
   render() {
     let content = this.props.notes.map((note) => {
-      return <NoteComponent key={note.id} data={note} />
+      return <NoteComponent key={note.id} data={note} notebook={this.props.id} />
     })
     return (
       <DefaultLayout>

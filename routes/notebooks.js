@@ -25,7 +25,7 @@ router.get('/notes/:id', (req, res, next) => {
     if (err) {
       next(err)
     } else {
-      render(err, res, next, 'notes', {title: notebook, notes: data, button: true})
+      render(err, res, next, 'notes', {id: req.params.id, title: notebook, notes: data, button: true})
     }
   })
 })

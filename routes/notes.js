@@ -14,7 +14,7 @@ const router = Router()
  */
 router.get('/', (req, res, next) => {
   Note.getAll((err, data) => {
-    render(err, res, next, 'notes', {title: 'All Notes', notes: data, button: false})
+    render(err, res, next, 'notes', {id: '', title: 'All Notes', notes: data, button: false})
   })
 })
 
@@ -36,9 +36,10 @@ router.post('/create', (req, res, next) => {
 /**
  * UPDATE a note
  */
-router.post('/update/:id', (req, res, next) => {
+router.post('/update/:id/:notebook?', (req, res, next) => {
   Note.update(req.params.id, req.body.title, req.body.notebook, req.body.note, (err, data) => {
-    redirect(err, res, next, '/notes')
+    let location = (!req.params.notebook) ? '/notes' : '/notebooks/notes/' + req.params.notebook
+    redirect(err, res, next, location)
   })
 })
 

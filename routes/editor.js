@@ -34,7 +34,7 @@ router.get('/add', (req, res, next) => {
 /**
  * GET edit page
  */
-router.get('/update/:id', (req, res, next) => {
+router.get('/update/:id/:notebook?', (req, res, next) => {
   Notebook.getAll((err, data) => {
     if (err) {
       next(err)
@@ -51,7 +51,7 @@ router.get('/update/:id', (req, res, next) => {
         } else {
           res.render('editor', {
             title: 'Update this note',
-            action: '/notes/update/' + req.params.id,
+            action: '/notes/update/' + req.params.id + '/' + req.params.notebook,
             name: data.title,
             note: data.content,
             notebooks: notebookOptions,
