@@ -35,7 +35,6 @@ class Note {
         callback(err)
       } else {
         if (data.notebook !== notebook) {
-          Notebook.removeNote(data.notebook, data.id)
           Notebook.addNote(notebook, data.id)
         }
         data.title = title
