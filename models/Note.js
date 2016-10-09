@@ -5,6 +5,7 @@
 
 import client from './db'
 import shortId from 'shortid'
+import Notebook from '../models/Notebook'
 
 class Note {
 
@@ -28,12 +29,17 @@ class Note {
     })
   }
 
-  static update(key, title, content, callback) {
+  static update(key, title, notebook, content, callback) {
     Note.get(key, (err, data) => {
       if (err) {
         callback(err)
       } else {
+        if (data.notebook !== notebook) {
+          Notebook.removeNote(data.notebook, data.id)
+          Notebook.addNote(notebook, data.id)
+        }
         data.title = title
+        data.notebook = notebook
         data.content = content
         data.updated = Date.now()
         Note.persist(data, callback)

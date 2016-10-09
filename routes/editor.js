@@ -35,15 +35,29 @@ router.get('/add', (req, res, next) => {
  * GET edit page
  */
 router.get('/update/:id', (req, res, next) => {
-  Note.get(req.params.id, (err, data) => {
+  Notebook.getAll((err, data) => {
     if (err) {
       next(err)
     } else {
-      res.render('editor', {
-        title: 'Update this note',
-        action: '/notes/update/' + req.params.id,
-        name: data.title,
-        note: data.content
+      let notebookOptions = []
+      for (let obj in data) {
+        if (data.hasOwnProperty(obj)) {
+          notebookOptions.push(data[obj])
+        }
+      }
+      Note.get(req.params.id, (err, data) => {
+        if (err) {
+          next(err)
+        } else {
+          res.render('editor', {
+            title: 'Update this note',
+            action: '/notes/update/' + req.params.id,
+            name: data.title,
+            note: data.content,
+            notebooks: notebookOptions,
+            selection: data.notebook
+          })
+        }
       })
     }
   })

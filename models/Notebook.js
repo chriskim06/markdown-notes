@@ -16,7 +16,9 @@ class Notebook {
 
   static persist(notebook, callback) {
     client.hset('notebooks', [`${notebook.id}`, JSON.stringify(notebook)], (err, reply) => {
-      callback(err, reply)
+      if (typeof callback === 'function') {
+        callback(err, reply)
+      }
     })
   }
 
@@ -61,6 +63,40 @@ class Notebook {
         }
       }
       callback(err, notebooks)
+    })
+  }
+
+  static getAllNotes(key, callback) {
+    Notebook.get(key, (err, data) => {
+      if (err) {
+        callback(err)
+      } else {
+        client.hmget('notes', data.notes, (err, reply) => {
+          callback(err, reply)
+        })
+      }
+    })
+  }
+
+  static addNote(key, note, callback) {
+    Notebook.get(key, (err, data) => {
+      if (err) {
+        callback(err)
+      } else {
+        data.notes.push(note)
+        Notebook.persist(data)
+      }
+    })
+  }
+
+  static removeNote(key, note, callback) {
+    Notebook.get(key, (err, data) => {
+      if (err) {
+        callback(err)
+      } else {
+        data.notes.splice(data.notes.indexOf(note))
+        Notebook.persist(data)
+      }
     })
   }
 

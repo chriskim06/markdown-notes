@@ -4,6 +4,7 @@
  */
 
 import Note from '../models/Note'
+import Notebook from '../models/Notebook'
 import { Router } from 'express'
 const router = Router()
 
@@ -24,11 +25,12 @@ router.get('/', (req, res, next) => {
  * CREATE a new note
  */
 router.post('/create', (req, res, next) => {
-  let note = new Note(req.body.title, req.body.note, null)
+  let note = new Note(req.body.title, req.body.note, req.body.notebook)
   Note.persist(note, (err, reply) => {
     if (err) {
       next(err)
     } else {
+      Notebook.addNote(req.body.notebook, note.id)
       res.redirect('/notes')
     }
   })
@@ -38,7 +40,7 @@ router.post('/create', (req, res, next) => {
  * UPDATE a note
  */
 router.post('/update/:id', (req, res, next) => {
-  Note.update(req.params.id, req.body.title, req.body.note, (err, data) => {
+  Note.update(req.params.id, req.body.title, req.body.notebook, req.body.note, (err, data) => {
     if (err) {
       next(err)
     } else {

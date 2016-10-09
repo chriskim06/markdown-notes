@@ -14,7 +14,7 @@ export default React.createClass({
     })
     return (
       <DefaultLayout>
-        <h1>Notes</h1>
+        <h1>All Notes</h1>
         <br />
         {content}
       </DefaultLayout>
