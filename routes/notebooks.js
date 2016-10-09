@@ -4,6 +4,7 @@
  */
 
 import Notebook from '../models/Notebook'
+import { render, redirect } from '../util/handler'
 import { Router } from 'express'
 const router = Router()
 
@@ -12,11 +13,7 @@ const router = Router()
  */
 router.get('/', (req, res, next) => {
   Notebook.getAll((err, data) => {
-    if (err) {
-      next(err)
-    } else {
-      res.render('index', {notebookNames: data})
-    }
+    render(err, res, next, 'index', {notebookNames: data})
   })
 })
 
@@ -26,11 +23,7 @@ router.get('/', (req, res, next) => {
 router.post('/create', (req, res, next) => {
   let notebook = new Notebook(req.body.title, [])
   Notebook.persist(notebook, (err, reply) => {
-    if (err) {
-      next(err)
-    } else {
-      res.redirect('/')
-    }
+    redirect(err, res, next, '/')
   })
 })
 
@@ -39,11 +32,7 @@ router.post('/create', (req, res, next) => {
  */
 router.post('/edit', (req, res, next) => {
   Notebook.update(req.body.notebookId, req.body.title, (err, reply) => {
-    if (err) {
-      next(err)
-    } else {
-      res.redirect('/')
-    }
+    redirect(err, res, next, '/')
   })
 })
 
@@ -52,11 +41,7 @@ router.post('/edit', (req, res, next) => {
  */
 router.post('/delete/:id', (req, res, next) => {
   Notebook.remove(req.params.id, (err, data) => {
-    if (err) {
-      next(err)
-    } else {
-      res.redirect('/')
-    }
+    redirect(err, res, next, '/')
   })
 })
 

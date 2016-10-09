@@ -4,6 +4,7 @@
  */
 
 import Notebook from '../models/Notebook'
+import { render } from '../util/handler'
 import { Router } from 'express'
 const router = Router()
 
@@ -12,11 +13,7 @@ const router = Router()
  */
 router.get('/', (req, res, next) => {
   Notebook.getAll((err, data) => {
-    if (err) {
-      next(err)
-    } else {
-      res.render('index', {notebookNames: data})
-    }
+    render(err, res, next, 'index', {notebookNames: data})
   })
 })
 
