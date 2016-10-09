@@ -16,11 +16,19 @@ const app = new Express()
 // start db
 import client from './models/db'
 
-process.on('SIGINT', () => {
+const shutdown = () => {
   console.log('Shutting down redis...')
   client.send_command('shutdown', () => {
     process.exit()
   })
+}
+
+process.on('SIGINT', () => {
+  shutdown()
+})
+process.on('uncaughtException', (err) => {
+  console.error(err)
+  shutdown()
 })
 
 // load route handlers
