@@ -12,6 +12,9 @@ export default React.createClass({
     let content = this.props.notes.map((note) => {
       return <NoteComponent key={note.id} data={note} notebook={this.props.id} />
     })
+    let notes = this.props.all.map((note) => {
+      return <option key={note.id} value={note.id}>{note.title}</option>
+    })
     return (
       <DefaultLayout>
         <div>
@@ -27,6 +30,32 @@ export default React.createClass({
           })()}
         </div>
         <br />
+        {(() => {
+          if (this.props.all.length) {
+            return (
+              <div id="manageNotes" className="modal fade" role="dialog">
+                <div className="modal-dialog">
+                  <div className="modal-content">
+                    <div className="modal-body">
+                      <form acceptCharset="utf-8" action="/notebooks/notes/update" method="post">
+                        <input id="notebookId" name="notebookId" type="hidden" value={this.props.id} />
+                        <div className="form-group">
+                          <label htmlFor="notes">Notes</label>
+                          <select id="notes" multiple className="form-control" name="notes" defaultValue={this.props.notes}>
+                            {notes}
+                          </select>
+                        </div>
+                        <div className="form-group">
+                          <input id="submit" className="btn btn-primary" name="submit" type="submit" value="Save" />
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )
+          }
+        })()}
         <div>
           {content}
         </div>

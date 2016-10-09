@@ -3,6 +3,7 @@
  * @author Chris
  */
 
+import Note from '../models/Note'
 import Notebook from '../models/Notebook'
 import { render, redirect } from '../util/handler'
 import { Router } from 'express'
@@ -21,11 +22,35 @@ router.get('/', (req, res, next) => {
  * GET all notes for a notebook
  */
 router.get('/notes/:id', (req, res, next) => {
-  Notebook.getAllNotes(req.params.id, (err, data, notebook) => {
+  Notebook.getNotes(req.params.id, (err, data, notebook) => {
     if (err) {
       next(err)
     } else {
-      render(err, res, next, 'notes', {id: req.params.id, title: notebook, notes: data, button: true})
+      Note.getAll((err, reply) => {
+        if (err) {
+          next(err)
+        } else {
+          render(err, res, next, 'notes', {id: req.params.id, title: notebook, notes: data, all: reply, button: true})
+        }
+      })
+    }
+  })
+})
+
+router.post('/notes/update', (req, res, next) => {
+  Notebook.update(req.body.notebookId, null, req.body.notes, (err, data) => {
+    if (err) {
+      next(err)
+    } else {
+      Notebook.getNotes(req.body.notebookId, (err, reply) => {
+        if (err) {
+          next(err)
+        } else {
+          Note.getAll((err, resp) => {
+            render(err, res, next, 'notes', {id: req.body.notebookId, title: data.name, notes: reply, all: resp, button: true})
+          })
+        }
+      })
     }
   })
 })
