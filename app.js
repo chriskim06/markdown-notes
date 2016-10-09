@@ -16,28 +16,10 @@ const app = new Express()
 // start db
 import client from './models/db'
 
-client.on('connect', () => {
-  console.log('Connected')
-})
-client.on('error', (err) => {
-  console.log(`Error: ${err}`)
-})
-
-let shutdown = (callback) => {
-  console.log('Shutting down redis...')
-  client.shutdown()
-  callback()
-}
-
 process.on('SIGINT', () => {
-  shutdown(() => {
+  console.log('Shutting down redis...')
+  client.send_command('shutdown', () => {
     process.exit()
-  })
-})
-process.once('SIGUSR2', () => {
-  console.log('nodemon restart')
-  shutdown(() => {
-    process.kill(process.pid, 'SIGUSR2')
   })
 })
 
@@ -46,8 +28,8 @@ import * as routes from './util/loader'
 
 // app setup
 app.set('views', path.join(__dirname, 'views'))
-app.set('view engine', 'jsx')
-app.engine('jsx', reactViews.createEngine())
+app.set('view engine', 'js')
+app.engine('js', reactViews.createEngine())
 
 app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')))
 // app.use(logger('dev'))

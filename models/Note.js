@@ -6,7 +6,7 @@
 import client from './db'
 import shortId from 'shortid'
 
-export default class Note {
+class Note {
 
   constructor(title, content, notebook) {
     this.id = shortId.generate()
@@ -74,3 +74,5 @@ export default class Note {
   }
 
 }
+
+export default Note

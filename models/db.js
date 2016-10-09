@@ -10,13 +10,20 @@ import { exec } from 'child_process'
 exec('redis-server redis.conf', (error, stdout, stderr) => {
   if (error) {
     console.error(`exec error: ${error}`)
-    return
+  } else {
+    console.log(`stdout: ${stdout}`)
+    console.log(`stderr: ${stderr}`)
   }
-  console.log(`stdout: ${stdout}`)
-  console.log(`stderr: ${stderr}`)
 })
 
 const client = redis.createClient()
+
+client.on('connect', () => {
+  console.log('Connected')
+})
+client.on('error', (err) => {
+  console.log(`Error: ${err}`)
+})
 
 client.hgetall('notebooks', (err, reply) => {
   if (!reply || !Object.keys(reply).length) {
