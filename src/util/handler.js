@@ -3,6 +3,11 @@
  * @author Chris
  */
 
+
+/**
+ * This is a commonly used callback handler that just passes the error
+ * along if there is one and redirects to a page otherwise.
+ */
 export const redirect = (err, res, next, path) => {
   if (err) {
     next(err)
@@ -11,6 +16,10 @@ export const redirect = (err, res, next, path) => {
   }
 }
 
+/**
+ * This is a commonly used callback handler that just passes the error
+ * along if there is one and renders a page otherwise.
+ */
 export const render = (err, res, next, view, data) => {
   if (err) {
     next(err)
@@ -19,6 +28,11 @@ export const render = (err, res, next, view, data) => {
   }
 }
 
+/**
+ * This executes the callback that it gets passed after building an array
+ * of notes that will be used for rendering some react components. The
+ * callback is passed an error object, the notes array, and the notebook id.
+ */
 export const sortNotes = (err, reply, notebook, callback) => {
   let notes = []
   if (reply) {
