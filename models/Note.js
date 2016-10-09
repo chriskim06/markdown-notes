@@ -66,6 +66,9 @@ class Note {
               content: note.content,
               edited: time.toLocaleString()
             })
+            notes.sort((a, b) => {
+              return a.edited < b.edited
+            })
           }
         }
       }

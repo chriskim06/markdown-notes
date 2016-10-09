@@ -54,6 +54,9 @@ class Notebook {
               id: notebook.id,
               name: notebook.name
             })
+            notebooks.sort((a, b) => {
+              return a.name > b.name
+            })
           }
         }
       }
