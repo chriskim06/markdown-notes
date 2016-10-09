@@ -14,7 +14,7 @@ const router = Router()
  */
 router.get('/', (req, res, next) => {
   Note.getAll((err, data) => {
-    render(err, res, next, 'notes', {notes: data})
+    render(err, res, next, 'notes', {title: 'All Notes', notes: data, button: false})
   })
 })
 

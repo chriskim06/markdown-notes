@@ -20,7 +20,7 @@ export default React.createClass({
         <button className="btn btn-info btn-sm nb-actions" type="button" data-toggle="modal" data-target={'#edit-' + props.notebookId}>
           <i className="fa fa-pencil-square-o fa-lg" aria-hidden="true" />&nbsp;Edit
         </button>
-        <a className="btn btn-default btn-sm nb-actions" title="Notes" href={'#' + props.notebookId} style={style}>
+        <a className="btn btn-default btn-sm nb-actions" title="Notes" href={'/notebooks/notes/' + props.notebookId} style={style}>
           <i className="fa fa-plus-square fa-lg" aria-hidden="true" />&nbsp;Notes
         </a>
         <button className="btn btn-info btn-sm nb-actions" type="button" data-toggle="modal" data-target={'#delete-' + props.notebookId}>

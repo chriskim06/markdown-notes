@@ -18,6 +18,19 @@ router.get('/', (req, res, next) => {
 })
 
 /**
+ * GET all notes for a notebook
+ */
+router.get('/notes/:id', (req, res, next) => {
+  Notebook.getAllNotes(req.params.id, (err, data, notebook) => {
+    if (err) {
+      next(err)
+    } else {
+      render(err, res, next, 'notes', {title: notebook, notes: data, button: true})
+    }
+  })
+})
+
+/**
  * CREATE a new notebook
  */
 router.post('/create', (req, res, next) => {

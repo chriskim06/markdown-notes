@@ -14,9 +14,22 @@ export default React.createClass({
     })
     return (
       <DefaultLayout>
-        <h1>All Notes</h1>
+        <div>
+          <h1 className="notebooks">{this.props.title}</h1>
+          {(() => {
+            if (this.props.button) {
+              return (
+                <button className="btn btn-info btn-sm notebooks" type="button" data-toggle="modal" data-target="#manageNotes">
+                  Manage Notes
+                </button>
+              )
+            }
+          })()}
+        </div>
         <br />
-        {content}
+        <div>
+          {content}
+        </div>
       </DefaultLayout>
     )
   }

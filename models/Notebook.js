@@ -5,6 +5,7 @@
 
 import client from './db'
 import shortId from 'shortid'
+import { sortNotes } from '../util/handler'
 
 class Notebook {
 
@@ -71,9 +72,13 @@ class Notebook {
       if (err) {
         callback(err)
       } else {
-        client.hmget('notes', data.notes, (err, reply) => {
-          callback(err, reply)
-        })
+        if (data.notes.length) {
+          client.hmget('notes', data.notes, (err, reply) => {
+            sortNotes(err, reply, data.name, callback)
+          })
+        } else {
+          sortNotes(err, null, data.name, callback)
+        }
       }
     })
   }
