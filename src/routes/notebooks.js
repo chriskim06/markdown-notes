@@ -25,7 +25,7 @@ router.get('/', (req, res, next) => {
  */
 router.get('/notes/:id', (req, res, next) => {
   Notebook.getNotes(req.params.id).then((response) => {
-    Note.getAllPromise().then((notes) => {
+    Note.getAll().then((notes) => {
       render(null, res, next, 'notes', {id: req.params.id, title: response.notebook, notes: response.notes, all: notes.all, button: true})
     }, (error) => {
       next(error)
@@ -41,10 +41,7 @@ router.post('/notes/update', (req, res, next) => {
       next(err)
     } else {
       Notebook.getNotes(req.body.notebookId).then((response) => {
-        // Note.getAll((err, reply) => {
-        //   render(err, res, next, 'notes', {id: req.body.notebookId, title: response.notebook, notes: response.notes, all: reply, button: true})
-        // })
-        Note.getAllPromise().then((notes) => {
+        Note.getAll().then((notes) => {
           render(null, res, next, 'notes', {id: req.params.id, title: response.notebook, notes: response.notes, all: notes.all, button: true})
         }, (error) => {
           next(error)

@@ -13,8 +13,10 @@ const router = Router()
  * GET all notes
  */
 router.get('/', (req, res, next) => {
-  Note.getAll((err, data) => {
-    render(err, res, next, 'notes', {id: '', title: 'All Notes', notes: data, all: [], button: false})
+  Note.getAll().then((notes) => {
+    render(null, res, next, 'notes', {id: '', title: 'All Notes', notes: notes.notes.notes, all: [], button: false})
+  }, (error) => {
+    next(error)
   })
 })
 

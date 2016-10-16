@@ -5,7 +5,7 @@
 
 import client from './db'
 import shortId from 'shortid'
-import { sortNotes, sortNotesArray } from '../util/handler'
+import { sortNotes } from '../util/handler'
 
 /**
  * Class that represents a notebook
@@ -149,7 +149,7 @@ class Notebook {
       Notebook.get(key).then((response) => {
         if (response.notes.length) {
           client.hmget('notes', response.notes, (err, reply) => {
-            resolve(sortNotesArray(err, reply, response.name))
+            resolve(sortNotes(err, reply, response.name))
           })
         } else {
           resolve({
