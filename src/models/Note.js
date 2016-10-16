@@ -21,9 +21,9 @@ class Note {
    * id and the time this note was last modified.
    *
    * @constructor
-   * @param {string} title      The title of the note.
-   * @param {string} content    The markdown contents of the note.
-   * @param {string} notebook   The id of the notebook this note is in.
+   * @param title      The title of the note.
+   * @param content    The markdown contents of the note.
+   * @param notebook   The id of the notebook this note is in.
    */
   constructor(title, content, notebook) {
     this.id = shortId.generate()
@@ -94,10 +94,10 @@ class Note {
   /**
    * This gets a single note object from the notes hash.
    *
-   * @param {string} key    The id of the note.
-   * @param {function} fn   A function that gets called after it has been saved.
-   *                        It gets passed an error if there was one and the number
-   *                        of fields that were changed in this operation.
+   * @param key   The id of the note.
+   * @param fn    A function that gets called after it has been saved.
+   *              It gets passed an error if there was one and the number
+   *              of fields that were changed in this operation.
    */
   static get(key, fn) {
     client.hget('notes', key, (err, reply) => {

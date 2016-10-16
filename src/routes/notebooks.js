@@ -69,7 +69,7 @@ router.post('/create', (req, res, next) => {
  * UPDATE an existing notebook
  */
 router.post('/edit', (req, res, next) => {
-  Notebook.update(req.body.notebookId, req.body.title, (err, reply) => {
+  Notebook.update(req.body.notebookId, req.body.title, null, (err, reply) => {
     redirect(err, res, next, '/')
   })
 })

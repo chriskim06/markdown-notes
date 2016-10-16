@@ -19,8 +19,8 @@ class Notebook {
    * the notes that are a part of the notebook.
    *
    * @constructor
-   * @param {string} name
-   * @param {array} notes
+   * @param name
+   * @param notes
    */
   constructor(name, notes = []) {
     this.id = shortId.generate()
@@ -31,11 +31,11 @@ class Notebook {
   /**
    * This saves a note to the notes hash in redis.
    *
-   * @param {string} notebook   The notebook object that is going to be saved to redis.
-   * @param {function} fn       A function that gets called after it has been saved.
-   *                            It gets passed an error if there was one and the response
-   *                            from the redis save operation (1 for new item and 0 for
-   *                            an existing one).
+   * @param notebook    The notebook object that is going to be saved to redis.
+   * @param fn          A function that gets called after it has been saved.
+   *                    It gets passed an error if there was one and the response
+   *                    from the redis save operation (1 for new item and 0 for
+   *                    an existing one).
    */
   static persist(notebook, fn) {
     client.hset('notebooks', [`${notebook.id}`, JSON.stringify(notebook)], (err, reply) => {
@@ -48,14 +48,14 @@ class Notebook {
   /**
    * This removes a note from the redis hash.
    *
-   * @param {string} key    The id of the notebook to be deleted.
-   * @param {function} fn   A function that gets called after it has been saved.
-   *                        It gets passed an error if there was one and the number
-   *                        of fields that were changed in this operation.
+   * @param key   The id of the notebook to be deleted.
+   * @param fn    A function that gets called after it has been saved.
+   *              It gets passed an error if there was one and the number
+   *              of fields that were changed in this operation.
    */
   static remove(key, fn) {
     client.hdel('notebooks', key, (err, reply) => {
-      callback(err, reply)
+      fn(err, reply)
     })
   }
 
@@ -63,12 +63,12 @@ class Notebook {
    * This saves new fields to an existing note object. Only non null
    * and non empty values overwrite the previous ones.
    *
-   * @param {string} key    The id of the notebook to update.
-   * @param {string} name   The new title to set.
-   * @param {string} notes  The new notebook to set.
-   * @param {function} fn   A function that gets called after it has been saved.
-   *                        It gets passed an error if there was one and the number
-   *                        of fields that were changed in this operation.
+   * @param key     The id of the notebook to update.
+   * @param name    The new title to set.
+   * @param notes   The new notebook to set.
+   * @param fn      A function that gets called after it has been saved.
+   *                It gets passed an error if there was one and the number
+   *                of fields that were changed in this operation.
    */
   static update(key, name, notes, fn) {
     Notebook.get(key, (err, data) => {
@@ -78,7 +78,7 @@ class Notebook {
         if (name) {
           data.name = name
         }
-        if (notes.length) {
+        if (notes && notes.length) {
           data.notes = notes
         }
         Notebook.persist(data, fn)
