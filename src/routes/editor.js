@@ -12,22 +12,20 @@ const router = Router()
  * GET create page
  */
 router.get('/add', (req, res, next) => {
-  Notebook.getAll((err, data) => {
-    if (err) {
-      next(err)
-    } else {
-      let notebookOptions = []
-      for (let obj in data) {
-        if (data.hasOwnProperty(obj)) {
-          notebookOptions.push(data[obj])
-        }
+  Notebook.getAll().then((response) => {
+    let notebookOptions = []
+    for (let obj in response) {
+      if (response.hasOwnProperty(obj)) {
+        notebookOptions.push(response[obj])
       }
-      res.render('editor', {
-        title: 'Add a new note!',
-        action: '/notes/create',
-        notebooks: notebookOptions
-      })
     }
+    res.render('editor', {
+      title: 'Add a new note!',
+      action: '/notes/create',
+      notebooks: notebookOptions
+    })
+  }, (error) => {
+    next(error)
   })
 })
 
@@ -35,31 +33,29 @@ router.get('/add', (req, res, next) => {
  * GET edit page
  */
 router.get('/update/:id/:notebook?', (req, res, next) => {
-  Notebook.getAll((err, data) => {
-    if (err) {
-      next(err)
-    } else {
-      let notebookOptions = []
-      for (let obj in data) {
-        if (data.hasOwnProperty(obj)) {
-          notebookOptions.push(data[obj])
-        }
+  Notebook.getAll().then((response) => {
+    let notebookOptions = []
+    for (let obj in response) {
+      if (response.hasOwnProperty(obj)) {
+        notebookOptions.push(response[obj])
       }
-      Note.get(req.params.id, (err, data) => {
-        if (err) {
-          next(err)
-        } else {
-          res.render('editor', {
-            title: 'Update this note',
-            action: '/notes/update/' + req.params.id + '/' + req.params.notebook,
-            name: data.title,
-            note: data.content,
-            notebooks: notebookOptions,
-            selection: data.notebook
-          })
-        }
-      })
     }
+    Note.get(req.params.id, (err, data) => {
+      if (err) {
+        next(err)
+      } else {
+        res.render('editor', {
+          title: 'Update this note',
+          action: '/notes/update/' + req.params.id + '/' + req.params.notebook,
+          name: data.title,
+          note: data.content,
+          notebooks: notebookOptions,
+          selection: data.notebook
+        })
+      }
+    })
+  }, (error) => {
+    next(error)
   })
 })
 

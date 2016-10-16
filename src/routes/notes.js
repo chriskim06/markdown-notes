@@ -27,8 +27,11 @@ router.post('/create', (req, res, next) => {
     if (err) {
       next(err)
     } else {
-      Notebook.addNote(req.body.notebook, note.id)
-      res.redirect('/notes')
+      Notebook.addNote(req.body.notebook, note.id).then((response) => {
+        res.redirect('/notes')
+      }, (error) => {
+        next(error)
+      })
     }
   })
 })

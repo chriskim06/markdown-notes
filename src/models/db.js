@@ -33,10 +33,10 @@ client.on('error', (err) => {
  */
 client.hgetall('notebooks', (err, reply) => {
   if (!reply || !Object.keys(reply).length) {
-    Notebook.persist(new Notebook('default'), (err, res) => {
-      if (err) {
-        console.error(err)
-      }
+    Notebook.persist(new Notebook('default')).then((response) => {
+      console.log(`Saved new notebook: ${response}`)
+    }, (error) => {
+      console.error(error)
     })
   }
 })

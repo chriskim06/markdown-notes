@@ -13,8 +13,10 @@ const router = Router()
  * GET all notebooks
  */
 router.get('/', (req, res, next) => {
-  Notebook.getAll((err, data) => {
-    render(err, res, next, 'index', {notebookNames: data})
+  Notebook.getAll().then((response) => {
+    render(null, res, next, 'index', {notebookNames: response})
+  }, (error) => {
+    next(error)
   })
 })
 
@@ -22,18 +24,14 @@ router.get('/', (req, res, next) => {
  * GET all notes for a notebook
  */
 router.get('/notes/:id', (req, res, next) => {
-  Notebook.getNotes(req.params.id, (err, data, notebook) => {
-    if (err) {
-      next(err)
-    } else {
-      Note.getAll((err, reply) => {
-        if (err) {
-          next(err)
-        } else {
-          render(err, res, next, 'notes', {id: req.params.id, title: notebook, notes: data, all: reply, button: true})
-        }
-      })
-    }
+  Notebook.getNotes(req.params.id).then((response) => {
+    Note.getAllPromise().then((notes) => {
+      render(null, res, next, 'notes', {id: req.params.id, title: response.notebook, notes: response.notes, all: notes.all, button: true})
+    }, (error) => {
+      next(error)
+    })
+  }, (error) => {
+    next(error)
   })
 })
 
@@ -42,14 +40,17 @@ router.post('/notes/update', (req, res, next) => {
     if (err) {
       next(err)
     } else {
-      Notebook.getNotes(req.body.notebookId, (err, reply) => {
-        if (err) {
-          next(err)
-        } else {
-          Note.getAll((err, resp) => {
-            render(err, res, next, 'notes', {id: req.body.notebookId, title: data.name, notes: reply, all: resp, button: true})
-          })
-        }
+      Notebook.getNotes(req.body.notebookId).then((response) => {
+        // Note.getAll((err, reply) => {
+        //   render(err, res, next, 'notes', {id: req.body.notebookId, title: response.notebook, notes: response.notes, all: reply, button: true})
+        // })
+        Note.getAllPromise().then((notes) => {
+          render(null, res, next, 'notes', {id: req.params.id, title: response.notebook, notes: response.notes, all: notes.all, button: true})
+        }, (error) => {
+          next(error)
+        })
+      }, (error) => {
+        next(error)
       })
     }
   })
@@ -60,8 +61,10 @@ router.post('/notes/update', (req, res, next) => {
  */
 router.post('/create', (req, res, next) => {
   let notebook = new Notebook(req.body.title, [])
-  Notebook.persist(notebook, (err, reply) => {
-    redirect(err, res, next, '/')
+  Notebook.persist(notebook).then((response) => {
+    redirect(null, res, next, '/')
+  }, (error) => {
+    next(error)
   })
 })
 
@@ -78,8 +81,10 @@ router.post('/edit', (req, res, next) => {
  * DELETE a notebook
  */
 router.post('/delete/:id', (req, res, next) => {
-  Notebook.remove(req.params.id, (err, data) => {
-    redirect(err, res, next, '/')
+  Notebook.remove(req.params.id).then((response) => {
+    redirect(null, res, next, '/')
+  }, (error) => {
+    next(error)
   })
 })
 

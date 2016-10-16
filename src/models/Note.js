@@ -6,7 +6,7 @@
 import client from './db'
 import shortId from 'shortid'
 import Notebook from './Notebook'
-import { sortNotes } from '../util/handler'
+import { sortNotes, sortNotesArray } from '../util/handler'
 
 /**
  * Class that represents a note
@@ -113,6 +113,26 @@ class Note {
   static getAll(fn) {
     client.hgetall('notes', (err, reply) => {
       sortNotes(err, reply, null, fn)
+    })
+  }
+  static getAllPromise() {
+    return new Promise((resolve, reject) => {
+      client.hgetall('notes', (err, reply) => {
+        if (err) {
+          reject(err)
+        } else {
+          let allNotes = []
+          for (let note in reply) {
+            if (reply.hasOwnProperty(note)) {
+              allNotes.push(note)
+            }
+          }
+          resolve({
+            notes: sortNotesArray(err, reply, null),
+            all: allNotes
+          })
+        }
+      })
     })
   }
 

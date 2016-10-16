@@ -12,8 +12,10 @@ const router = Router()
  * GET all notebooks (currently the default page)
  */
 router.get('/', (req, res, next) => {
-  Notebook.getAll((err, data) => {
-    render(err, res, next, 'index', {notebookNames: data})
+  Notebook.getAll().then((response) => {
+    render(null, res, next, 'index', {notebookNames: response})
+  }, (error) => {
+    next(error)
   })
 })
 
