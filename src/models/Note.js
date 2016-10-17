@@ -42,9 +42,15 @@ class Note {
    *              from the redis save operation (1 for new item and 0 for
    *              an existing one).
    */
-  static persist(note, fn) {
-    client.hset('notes', [`${note.id}`, JSON.stringify(note)], (err, reply) => {
-      fn(err, reply)
+  static persist(note) {
+    return new Promise((resolve, reject) => {
+      client.hset('notes', [`${note.id}`, JSON.stringify(note)], (err, reply) => {
+        if (err) {
+          reject(err)
+        } else {
+          resolve(note)
+        }
+      })
     })
   }
 
@@ -86,7 +92,11 @@ class Note {
         data.notebook = notebook
         data.content = content
         data.updated = Date.now()
-        Note.persist(data, fn)
+        Note.persist(data).then((response) => {
+          fn(null, response)
+        }, (error) => {
+          fn(error, null)
+        })
       }
     })
   }

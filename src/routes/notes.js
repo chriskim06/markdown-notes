@@ -25,16 +25,14 @@ router.get('/', (req, res, next) => {
  */
 router.post('/create', (req, res, next) => {
   let note = new Note(req.body.title, req.body.note, req.body.notebook)
-  Note.persist(note, (err, reply) => {
-    if (err) {
-      next(err)
-    } else {
-      Notebook.addNote(req.body.notebook, note.id).then((response) => {
-        res.redirect('/notes')
-      }, (error) => {
-        next(error)
-      })
-    }
+  Note.persist(note).then((response) => {
+    return Notebook.addNote(req.body.notebook, note.id)
+  }, (error) => {
+    next(error)
+  }).then((response) => {
+    res.redirect('/notes')
+  }, (error) => {
+    next(error)
   })
 })
 
