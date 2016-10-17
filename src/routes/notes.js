@@ -41,7 +41,7 @@ router.post('/create', (req, res, next) => {
  */
 router.post('/update/:id/:notebook?', (req, res, next) => {
   Note.update(req.params.id, req.body.title, req.body.notebook, req.body.note, (err, data) => {
-    let location = (!req.params.notebook) ? '/notes' : '/notebooks/notes/' + req.params.notebook
+    let location = (req.params.notebook === 'undefined' || req.params.notebook === '') ? '/notes' : '/notebooks/notes/' + req.params.notebook
     redirect(err, res, next, location)
   })
 })

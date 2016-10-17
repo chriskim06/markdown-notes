@@ -40,19 +40,23 @@ router.get('/update/:id/:notebook?', (req, res, next) => {
         notebookOptions.push(response[obj])
       }
     }
-    Note.get(req.params.id, (err, data) => {
-      if (err) {
-        next(err)
-      } else {
-        res.render('editor', {
-          title: 'Update this note',
-          action: '/notes/update/' + req.params.id + '/' + req.params.notebook,
-          name: data.title,
-          note: data.content,
-          notebooks: notebookOptions,
-          selection: data.notebook
-        })
+    Note.get(req.params.id).then((data) => {
+      let notebookOptions = []
+      for (let obj in response) {
+        if (response.hasOwnProperty(obj)) {
+          notebookOptions.push(response[obj])
+        }
       }
+      res.render('editor', {
+        title: 'Update this note',
+        action: '/notes/update/' + req.params.id + '/' + req.params.notebook,
+        name: data.title,
+        note: data.content,
+        notebooks: notebookOptions,
+        selection: data.notebook
+      })
+    }, (error) => {
+      next(error)
     })
   }, (error) => {
     next(error)

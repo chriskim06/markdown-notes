@@ -80,37 +80,38 @@ class Note {
    *                   of fields that were changed in this operation.
    */
   static update(key, title, notebook, content, fn) {
-    Note.get(key, (err, data) => {
-      if (err) {
-        fn(err)
-      } else {
-        if (data.notebook !== notebook) {
-          Notebook.addNote(notebook, data.id)
-        }
-        data.title = title
-        data.notebook = notebook
-        data.content = content
-        data.updated = Date.now()
-        Note.persist(data).then((response) => {
-          fn(null, response)
-        }, (error) => {
-          fn(error, null)
-        })
+    Note.get(key).then((data) => {
+      if (data.notebook !== notebook) {
+        Notebook.addNote(notebook, data.id)
       }
+      data.title = title
+      data.notebook = notebook
+      data.content = content
+      data.updated = Date.now()
+      return Note.persist(data)
+    }, (error) => {
+      fn(error, null)
+    }).then((response) => {
+      fn(null, response)
+    }, (error) => {
+      fn(error, null)
     })
   }
 
   /**
-   * This gets a single note object from the notes hash.
+   * This gets a single note object from the notes hash and returns a Promise.
    *
    * @param key   The id of the note.
-   * @param fn    A function that gets called after it has been saved.
-   *              It gets passed an error if there was one and the number
-   *              of fields that were changed in this operation.
    */
-  static get(key, fn) {
-    client.hget('notes', key, (err, reply) => {
-      fn(err, JSON.parse(reply))
+  static get(key) {
+    return new Promise((resolve, reject) => {
+      client.hget('notes', key, (err, reply) => {
+        if (err) {
+          reject(err)
+        } else {
+          resolve(JSON.parse(reply))
+        }
+      })
     })
   }
 
