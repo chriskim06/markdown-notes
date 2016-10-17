@@ -34,13 +34,9 @@ class Note {
   }
 
   /**
-   * This saves a note to the notes hash in redis.
+   * This saves a note to the notes hash in redis and returns a Promise.
    *
    * @param note  The note object that is going to be saved to redis.
-   * @param fn    A function that gets called after it has been saved.
-   *              It gets passed an error if there was one and the response
-   *              from the redis save operation (1 for new item and 0 for
-   *              an existing one).
    */
   static persist(note) {
     return new Promise((resolve, reject) => {
@@ -55,16 +51,19 @@ class Note {
   }
 
   /**
-   * This removes a note from the redis hash.
+   * This removes a note from the redis hash and returns a Promise.
    *
    * @param key   The id of the note to be deleted.
-   * @param fn    A function that gets called after it has been saved.
-   *              It gets passed an error if there was one and the number
-   *              of fields that were changed in this operation.
    */
-  static remove(key, fn) {
-    client.hdel('notes', key, (err, reply) => {
-      fn(err, reply)
+  static remove(key) {
+    return new Promise((resolve, reject) => {
+      client.hdel('notes', key, (err, reply) => {
+        if (err) {
+          reject(err)
+        } else {
+          resolve(reply)
+        }
+      })
     })
   }
 

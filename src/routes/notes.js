@@ -50,8 +50,10 @@ router.post('/update/:id/:notebook?', (req, res, next) => {
  * DELETE a note
  */
 router.post('/delete/:id', (req, res, next) => {
-  Note.remove(req.params.id, (err, data) => {
-    redirect(err, res, next, '/notes')
+  Note.remove(req.params.id).then((response) => {
+    redirect(null, res, next, '/notes')
+  }, (error) => {
+    next(error)
   })
 })
 
