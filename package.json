@@ -3,32 +3,33 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node ./bin/www",
-    "debug": "node $NODE_DEBUG_OPTION ./node_modules/babel-cli/bin/babel-node.js ./bin/www --presets es2015,react",
-    "resources": "cp -r bin out/ && cp -r public out/ && cp -r views out/",
-    "out-bin": "babel bin --out-dir out/bin --source-maps",
-    "out-models": "babel models --out-dir out/models --source-maps",
-    "out-routes": "babel routes --out-dir out/routes --source-maps",
-    "out-util": "babel util --out-dir out/util --source-maps",
-    "out-app": "babel app.js --out-file out/app.js --source-maps",
+    "start": "node ./out/src/bin/www",
+    "debug": "node $NODE_DEBUG_OPTION ./node_modules/babel-cli/bin/babel-node.js ./out/src/bin/www --presets es2015,react",
+    "resources": "cp -r src/bin out/src/ && cp -r src/public out/src/ && cp -r src/views out/src/",
+    "out-bin": "babel src/bin --out-dir out/src/bin --source-maps",
+    "out-models": "babel src/models --out-dir out/src/models --source-maps",
+    "out-routes": "babel src/routes --out-dir out/src/routes --source-maps",
+    "out-util": "babel src/util --out-dir out/src/util --source-maps",
+    "out-app": "babel src/app.js --out-file out/src/app.js --source-maps",
     "babel": "npm run resources && npm run out-models && npm run out-routes && npm run out-util && npm run out-app"
   },
   "dependencies": {
-    "body-parser": "~1.13.2",
-    "cookie-parser": "~1.3.5",
-    "debug": "~2.2.0",
+    "babel-cli": "^6.14.0",
+    "babel-core": "^6.14.0",
+    "babel-preset-es2015": "^6.14.0",
+    "babel-preset-react": "^6.11.1",
+    "body-parser": "^1.15.2",
+    "cookie-parser": "^1.4.3",
+    "debug": "^2.2.0",
     "express": "^4.13.4",
     "express-react-views": "^0.10.2",
-    "mongoose": "^4.4.12",
     "morgan": "~1.6.1",
-    "react": "^15.1.0",
+    "react": "^15.3.1",
+    "react-dom": "^15.3.2",
+    "redis": "^2.6.2",
     "serve-favicon": "~2.3.0",
+    "shortid": "^2.2.6",
     "simplemde": "^1.10.1"
   },
-  "devDependencies": {
-    "babel-cli": "^6.11.4",
-    "babel-core": "^6.13.2",
-    "babel-preset-es2015": "^6.13.2",
-    "babel-preset-react": "^6.11.1"
-  }
+  "devDependencies": {}
 }

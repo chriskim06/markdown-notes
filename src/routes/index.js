@@ -3,7 +3,7 @@
  * @author Chris
  */
 
-import { Notebook } from '../util/loader'
+import Notebook from '../models/Notebook'
 import { Router } from 'express'
 const router = Router()
 
@@ -11,12 +11,10 @@ const router = Router()
  * GET all notebooks (currently the default page)
  */
 router.get('/', (req, res, next) => {
-  Notebook.getNotebooks(0, 0, (err, data) => {
-    if (err) {
-      next(err)
-    } else {
-      res.render('index', {notebookNames: data})
-    }
+  Notebook.getAll().then((response) => {
+    res.render('index', {notebookNames: response})
+  }, (error) => {
+    next(error)
   })
 })
 

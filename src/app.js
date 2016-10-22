@@ -3,7 +3,6 @@
  * @author Chris
  */
 
-import './models/db'
 import Express from 'express'
 import path from 'path'
 import favicon from 'serve-favicon'
@@ -14,18 +13,36 @@ import reactViews from 'express-react-views'
 
 const app = new Express()
 
+// start db
+import client from './models/db'
+
+const shutdown = () => {
+  console.log('Shutting down redis...')
+  client.send_command('shutdown', () => {
+    process.exit()
+  })
+}
+
+process.on('SIGINT', () => {
+  shutdown()
+})
+process.on('uncaughtException', (err) => {
+  console.error(err)
+  shutdown()
+})
+
 // load route handlers
 import * as routes from './util/loader'
 
 // app setup
 app.set('views', path.join(__dirname, 'views'))
-app.set('view engine', 'jsx')
-app.engine('jsx', reactViews.createEngine())
+app.set('view engine', 'js')
+app.engine('js', reactViews.createEngine())
 
 app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')))
-app.use(logger('dev'))
+// app.use(logger('dev'))
 app.use(bodyParser.json())
-app.use(bodyParser.urlencoded({extended: false}))
+app.use(bodyParser.urlencoded({extended: true}))
 app.use(cookieParser())
 app.use(Express.static(path.join(__dirname, 'public')))
 
