@@ -38,7 +38,7 @@ class Note {
    */
   static persist(note) {
     return new Promise((resolve, reject) => {
-      client.send_command('hset', ['notes', [`${note.id}`, JSON.stringify(note)]], (err, reply) => {
+      client.send_command('hset', ['notes', [`${note.id}`, JSON.stringify(note)]], (err) => {
         if (err) {
           reject(err)
         } else {

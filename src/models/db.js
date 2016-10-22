@@ -29,7 +29,7 @@ client.on('error', (err) => {
 /**
  * Initializes with one notebook if the hash is empty.
  */
-client.hgetall('notebooks', (err, reply) => {
+client.send_command('hgetall', ['notebooks'], (err, reply) => {
   if (!reply || !Object.keys(reply).length) {
     Notebook.persist(new Notebook('default')).then((response) => {
       console.log(`Saved new notebook: ${response}`)

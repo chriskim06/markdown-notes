@@ -33,7 +33,7 @@ class Notebook {
    */
   static persist(notebook) {
     return new Promise((resolve, reject) => {
-      client.hset('notebooks', [`${notebook.id}`, JSON.stringify(notebook)], (err, reply) => {
+      client.send_command('hset', ['notebooks', [`${notebook.id}`, JSON.stringify(notebook)]], (err) => {
         if (err) {
           reject(err)
         } else {
@@ -51,7 +51,7 @@ class Notebook {
    */
   static remove(key) {
     return new Promise((resolve, reject) => {
-      client.hdel('notebooks', key, (err, reply) => {
+      client.send_command('hdel', ['notebooks', key], (err, reply) => {
         if (err) {
           reject(err)
         } else {
@@ -92,7 +92,7 @@ class Notebook {
    */
   static get(key) {
     return new Promise((resolve, reject) => {
-      client.hget('notebooks', key, (err, reply) => {
+      client.send_command('hget', ['notebooks', key], (err, reply) => {
         if (err) {
           reject(err)
         } else {
@@ -109,7 +109,7 @@ class Notebook {
    */
   static getAll() {
     return new Promise((resolve, reject) => {
-      client.hgetall('notebooks', (err, reply) => {
+      client.send_command('hgetall', ['notebooks'], (err, reply) => {
         if (err) {
           reject(err)
         } else {
@@ -146,7 +146,7 @@ class Notebook {
     return new Promise((resolve, reject) => {
       Notebook.get(key).then((response) => {
         if (response.notes.length) {
-          client.hmget('notes', response.notes, (err, reply) => {
+          client.send_command('hmget', ['notes', response.notes], (err, reply) => {
             resolve(sortNotes(err, reply, sort, 1, response.name))
           })
         } else {
