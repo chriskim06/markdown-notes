@@ -12,7 +12,7 @@ const router = Router()
  * GET all notes
  */
 router.get('/', (req, res, next) => {
-  Note.getAll('edited', 1).then((notes) => {
+  Note.getAll('edited', 0).then((notes) => {
     res.render('notes', {id: '', title: 'All Notes', notes: notes, all: [], button: false})
   }, (error) => {
     next(error)
