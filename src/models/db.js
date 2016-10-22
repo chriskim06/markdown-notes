@@ -7,9 +7,7 @@ import redis from 'redis'
 import Notebook from './Notebook'
 import { exec } from 'child_process'
 
-/**
- * Start redis server from within the application
- */
+// Starts the redis server from within the application
 exec('redis-server ../redis.conf', (error, stdout, stderr) => {
   if (error) {
     console.error(`exec error: ${error}`)
@@ -29,7 +27,7 @@ client.on('error', (err) => {
 })
 
 /**
- * Initialize with one notebook if the hash is empty
+ * Initializes with one notebook if the hash is empty.
  */
 client.hgetall('notebooks', (err, reply) => {
   if (!reply || !Object.keys(reply).length) {

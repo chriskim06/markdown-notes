@@ -4,34 +4,32 @@
  */
 
 import client from './db'
-import shortId from 'shortid'
-import { sortNotes } from '../util/handler'
+import { sortNotes, uuid } from '../util/handler'
 
 /**
- * Class that represents a notebook
- *
- * @class
+ * Describes notebooks and contains methods for handling them.
  */
 class Notebook {
 
   /**
-   * Notebooks are simple; they only have a title and a list of
+   * Notebooks are simple. They only have a title and a list of
    * the notes that are a part of the notebook.
    *
    * @constructor
-   * @param name
-   * @param notes
+   * @param {string} name - The visible title of the notebook.
+   * @param {Array} notes - An array of note IDs associated with the notebook.
    */
   constructor(name, notes = []) {
-    this.id = shortId.generate()
+    this.id = uuid()
     this.name = name
     this.notes = notes
   }
 
   /**
-   * This saves a note to the notes hash in redis and returns a Promise.
+   * This saves a note to the notes hash in redis.
    *
-   * @param notebook  The notebook object that is going to be saved to redis.
+   * @param {Object} notebook - The notebook object to be saved.
+   * @returns {Promise}
    */
   static persist(notebook) {
     return new Promise((resolve, reject) => {
@@ -46,9 +44,10 @@ class Notebook {
   }
 
   /**
-   * This removes a note from the redis hash and returns a Promise.
+   * This removes a note from the redis hash.
    *
-   * @param key   The id of the notebook to be deleted.
+   * @param {string} key - The ID of the notebook to be deleted.
+   * @returns {Promise}
    */
   static remove(key) {
     return new Promise((resolve, reject) => {
@@ -66,12 +65,10 @@ class Notebook {
    * This saves new fields to an existing note object. Only non null
    * and non empty values overwrite the previous ones.
    *
-   * @param key     The id of the notebook to update.
-   * @param name    The new title to set.
-   * @param notes   The new notebook to set.
-   * @param fn      A function that gets called after it has been saved.
-   *                It gets passed an error if there was one and the number
-   *                of fields that were changed in this operation.
+   * @param {string} key - The ID of the notebook to update.
+   * @param {?string} name - The new title to set.
+   * @param {Array} notes - The new note IDs to set.
+   * @param {Function} fn - A callback function.
    */
   static update(key, name, notes, fn) {
     Notebook.get(key).then((response) => {
@@ -92,9 +89,10 @@ class Notebook {
   }
 
   /**
-   * This returns a single notebook and returns a Promise.
+   * This gets a single notebook from redis.
    *
-   * @param key   The id of the notebook.
+   * @param {string} key - The ID of the notebook.
+   * @returns {Promise}
    */
   static get(key) {
     return new Promise((resolve, reject) => {
@@ -109,7 +107,9 @@ class Notebook {
   }
 
   /**
-   * This gets all of the notebooks in the redis hash and returns a Promise.
+   * This gets all of the notebooks in the redis hash.
+   *
+   * @returns {Promise}
    */
   static getAll() {
     return new Promise((resolve, reject) => {
@@ -139,10 +139,11 @@ class Notebook {
   }
 
   /**
-   * This returns a Promise that resolves an array of all the notes
-   * that belong to this notebook sorted by last modification date.
+   * This resolves an array of all the notes that belong to this
+   * notebook sorted by last modification date.
    *
-   * @param key   The notebook id whose notes this method returns.
+   * @param {string} key - The notebook ID whose notes this method returns.
+   * @returns {Promise}
    */
   static getNotes(key) {
     return new Promise((resolve, reject) => {
@@ -164,10 +165,11 @@ class Notebook {
   }
 
   /**
-   * This adds a note id to this notebook's list of notes and returns a Promise.
+   * This adds a note ID to this notebook's array of notes.
    *
-   * @param key     The id of the notebook.
-   * @param note    The note to add.
+   * @param {string} key - The ID of the notebook.
+   * @param {string} note - The note to add.
+   * @returns {Promise}
    */
   static addNote(key, note) {
     return new Promise((resolve, reject) => {
@@ -185,10 +187,11 @@ class Notebook {
   }
 
   /**
-   * This removes a note id from this notebook's list of notes and returns a Promise.
+   * This removes a note ID from this notebook's array of notes.
    *
-   * @param key     The id of the notebook.
-   * @param note    The note to remove.
+   * @param {string} key - The ID of the notebook.
+   * @param {string} note - The note to remove.
+   * @returns {Promise}
    */
   static removeNote(key, note) {
     return new Promise((resolve, reject) => {

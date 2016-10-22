@@ -4,14 +4,11 @@
  */
 
 import client from './db'
-import shortId from 'shortid'
 import Notebook from './Notebook'
-import { sortNotes } from '../util/handler'
+import { sortNotes, uuid } from '../util/handler'
 
 /**
- * Class that represents a note
- *
- * @class
+ * Describes notes and contains methods for handling them.
  */
 class Note {
 
@@ -21,12 +18,12 @@ class Note {
    * id and the time this note was last modified.
    *
    * @constructor
-   * @param title      The title of the note.
-   * @param content    The markdown contents of the note.
-   * @param notebook   The id of the notebook this note is in.
+   * @param {string} title - The title of the note.
+   * @param {string} content - The markdown contents of the note.
+   * @param {string} notebook - The ID of the notebook this belongs to.
    */
   constructor(title, content, notebook) {
-    this.id = shortId.generate()
+    this.id = uuid()
     this.title = title
     this.content = content
     this.notebook = notebook
@@ -34,9 +31,10 @@ class Note {
   }
 
   /**
-   * This saves a note to the notes hash in redis and returns a Promise.
+   * This saves a note to the notes hash in redis.
    *
-   * @param note  The note object that is going to be saved to redis.
+   * @param {Object} note - The note object to be saved.
+   * @returns {Promise}
    */
   static persist(note) {
     return new Promise((resolve, reject) => {
@@ -51,9 +49,10 @@ class Note {
   }
 
   /**
-   * This removes a note from the redis hash and returns a Promise.
+   * This removes a note from the redis hash.
    *
-   * @param key   The id of the note to be deleted.
+   * @param {string} key - The ID of the note to be deleted.
+   * @returns {Promise}
    */
   static remove(key) {
     return new Promise((resolve, reject) => {
@@ -71,13 +70,11 @@ class Note {
    * This saves new fields to an existing note object. Only non null
    * and non empty values overwrite the previous ones.
    *
-   * @param key        The id of the note to update.
-   * @param title      The new title to set.
-   * @param notebook   The new notebook to set.
-   * @param content    The content to set.
-   * @param fn         A function that gets called after it has been saved.
-   *                   It gets passed an error if there was one and the number
-   *                   of fields that were changed in this operation.
+   * @param {string} key - The ID of the note to update.
+   * @param {string} title - The new title to set.
+   * @param {string} notebook - The new notebook ID to set.
+   * @param {string} content - The content to set.
+   * @param {Function} fn - A callback function.
    */
   static update(key, title, notebook, content, fn) {
     Note.get(key).then((data) => {
@@ -99,9 +96,10 @@ class Note {
   }
 
   /**
-   * This gets a single note object from the notes hash and returns a Promise.
+   * This gets a single note object from the notes hash.
    *
-   * @param key   The id of the note.
+   * @param key - The ID of the note.
+   * @returns {Promise}
    */
   static get(key) {
     return new Promise((resolve, reject) => {
@@ -117,6 +115,8 @@ class Note {
 
   /**
    * This gets all of the notes from the notes hash.
+   *
+   * @returns {Promise}
    */
   static getAll() {
     return new Promise((resolve, reject) => {

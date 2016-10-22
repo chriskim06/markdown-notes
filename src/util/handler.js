@@ -1,12 +1,23 @@
 /**
- * @fileoverview Functions to be used in callbacks
+ * @fileoverview Functions that are used in many places
  * @author Chris
  */
 
+import shortId from 'shortid'
+
+/**
+ * Exports the generate method from shortId.
+ */
+export const uuid = shortId.generate
 
 /**
  * This is a commonly used callback handler that just passes the error
  * along if there is one and redirects to a page otherwise.
+ *
+ * @param {Object} err - The error object being passed along.
+ * @param {Object} res - The response object.
+ * @param {Function} next - The next middleware function.
+ * @param {string} path - The URL to redirect to.
  */
 export const redirect = (err, res, next, path) => {
   if (err) {
@@ -19,6 +30,12 @@ export const redirect = (err, res, next, path) => {
 /**
  * This is a commonly used callback handler that just passes the error
  * along if there is one and renders a page otherwise.
+ *
+ * @param {Object} err - The error object being passed along.
+ * @param {Object} res - The response object.
+ * @param {Function} next - The next middleware function.
+ * @param {string} view - The view that will be rendered.
+ * @param {Object} data - The data to pass to the view.
  */
 export const render = (err, res, next, view, data) => {
   if (err) {
@@ -32,6 +49,10 @@ export const render = (err, res, next, view, data) => {
  * This executes the callback that it gets passed after building an array
  * of notes that will be used for rendering some react components. The
  * callback is passed an error object, the notes array, and the notebook id.
+ *
+ * @param {Object} err - The error object being passed along.
+ * @param {Array} reply - The array of notes to sort.
+ * @param {?string} notebook - The notebook ID.
  */
 export const sortNotes = (err, reply, notebook) => {
   let notes = []
