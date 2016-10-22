@@ -5,7 +5,7 @@
 
 import client from './db'
 import Notebook from './Notebook'
-import { sortNotes, uuid } from '../util/handler'
+import { sortNotes, uuid } from '../util/helper'
 
 /**
  * Describes notes and contains methods for handling them.
@@ -35,7 +35,7 @@ class Note {
    */
   persist() {
     return new Promise((resolve, reject) => {
-      client.send_command('hset', ['notes', [`${this.id}`, JSON.stringify(this)]], (err) => {
+      client.send_command('hset', ['notes', `${this.id}`, JSON.stringify(this)], (err) => {
         if (err) {
           reject(err)
         } else {

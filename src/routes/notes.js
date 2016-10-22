@@ -12,8 +12,8 @@ const router = Router()
  * GET all notes
  */
 router.get('/', (req, res, next) => {
-  Note.getAll('edited', 0).then((notes) => {
-    res.render('notes', {id: '', title: 'All Notes', notes: notes, all: [], button: false})
+  Note.getAll('edited', 0).then((response) => {
+    res.render('notes', {id: '', title: 'All Notes', notes: response, all: [], button: false})
   }, (error) => {
     next(error)
   })
@@ -23,7 +23,7 @@ router.get('/', (req, res, next) => {
  * CREATE a new note
  */
 router.post('/create', (req, res, next) => {
-  let note = new Note(req.body.title, req.body.note)
+  const note = new Note(req.body.title, req.body.note)
   const p1 = note.persist()
   const p2 = Notebook.addNote(req.body.notebook, note.id)
   Promise.all([p1, p2]).then(() => {
@@ -37,8 +37,10 @@ router.post('/create', (req, res, next) => {
  * UPDATE a note
  */
 router.post('/update/:id/:notebook?', (req, res, next) => {
-  Note.update(req.params.id, req.body.title, req.body.notebook, req.body.note).then(() => {
-    let location = (req.params.notebook === 'undefined' || req.params.notebook === '') ? '/notes' : '/notebooks/notes/' + req.params.notebook
+  const params = req.params
+  const body = req.body
+  Note.update(params.id, body.title, body.notebook, body.note).then(() => {
+    let location = (params.notebook === 'undefined' || params.notebook === '') ? '/notes' : '/notebooks/notes/' + params.notebook
     res.redirect(location)
   }, (error) => {
     next(error)

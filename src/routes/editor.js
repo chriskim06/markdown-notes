@@ -34,12 +34,12 @@ router.get('/add', (req, res, next) => {
  * GET edit page
  */
 router.get('/update/:id/:notebook?', (req, res, next) => {
-  Note.get(req.params.id).then((data) => {
+  Note.get(req.params.id).then((response) => {
     res.render('editor', {
       title: 'Update this note',
       action: '/notes/update/' + req.params.id + '/' + req.params.notebook,
-      name: data.title,
-      note: data.content,
+      name: response.title,
+      note: response.content,
       notebooks: [],
       showNotebooks: false
     })

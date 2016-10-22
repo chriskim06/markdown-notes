@@ -39,16 +39,16 @@ export const sortNotes = (reply, prop, asc, notebook) => {
             content: note.content,
             edited: time.toLocaleString()
           })
-          notes.sort((a, b) => {
-            if (asc) {
-              return a[prop] > b[prop]
-            } else {
-              return a[prop] < b[prop]
-            }
-          })
         }
       }
     }
+    notes.sort((a, b) => {
+      if (asc) {
+        return a[prop] > b[prop]
+      } else {
+        return a[prop] < b[prop]
+      }
+    })
   }
   return {
     notebook: notebook,
