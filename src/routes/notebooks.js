@@ -34,20 +34,13 @@ router.get('/notes/:id', (req, res, next) => {
 })
 
 router.post('/notes/update', (req, res, next) => {
-  Notebook.update(req.body.notebookId, null, req.body.notes, (err, data) => {
-    if (err) {
-      next(err)
-    } else {
-      Notebook.getNotes(req.body.notebookId, 'edited').then((response) => {
-        Note.getAll('title', 1).then((notes) => {
-          redirect(err, res, next, `/notebooks/notes/${req.body.notebookId}`)
-        }, (error) => {
-          next(error)
-        })
-      }, (error) => {
-        next(error)
-      })
-    }
+  const p1 = Notebook.update(req.body.notebookId, null, req.body.notes)
+  const p2 = Notebook.getNotes(req.body.notebookId, 'edited')
+  const p3 = Note.getAll('title', 1)
+  Promise.all([p1, p2, p3]).then(() => {
+    redirect(null, res, next, `/notebooks/notes/${req.body.notebookId}`)
+  }, (error) => {
+    next(error)
   })
 })
 
@@ -67,8 +60,10 @@ router.post('/create', (req, res, next) => {
  * UPDATE an existing notebook
  */
 router.post('/edit', (req, res, next) => {
-  Notebook.update(req.body.notebookId, req.body.title, null, (err) => {
-    redirect(err, res, next, '/')
+  Notebook.update(req.body.notebookId, req.body.title, null).then(() => {
+    redirect(null, res, next, '/')
+  }, (error) => {
+    next(error)
   })
 })
 

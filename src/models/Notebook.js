@@ -67,11 +67,11 @@ class Notebook {
    *
    * @param {string} key - The ID of the notebook to update.
    * @param {?string} name - The new title to set.
-   * @param {Array} notes - The new note IDs to set.
-   * @param {Function} fn - A callback function.
+   * @param {?Array} notes - The new note IDs to set.
+   * @returns {Promise}
    */
-  static update(key, name, notes, fn) {
-    Notebook.get(key).then((response) => {
+  static update(key, name, notes) {
+    return Notebook.get(key).then((response) => {
       if (name) {
         response.name = name
       }
@@ -80,11 +80,7 @@ class Notebook {
       }
       return Notebook.persist(response)
     }, (error) => {
-      fn(error, null)
-    }).then((response) => {
-      fn(null, response)
-    }, (error) => {
-      fn(error, null)
+      return Promise.reject(error)
     })
   }
 
