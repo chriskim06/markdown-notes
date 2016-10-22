@@ -40,7 +40,7 @@ router.post('/notes/update', (req, res, next) => {
     } else {
       Notebook.getNotes(req.body.notebookId, 'edited').then((response) => {
         Note.getAll('title', 1).then((notes) => {
-          render(null, res, next, 'notes', {id: req.params.id, title: response.notebook, notes: response.notes, all: notes.all, button: true})
+          redirect(err, res, next, `/notebooks/notes/${req.body.notebookId}`)
         }, (error) => {
           next(error)
         })
