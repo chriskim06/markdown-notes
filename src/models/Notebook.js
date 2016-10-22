@@ -143,14 +143,15 @@ class Notebook {
    * notebook sorted by last modification date.
    *
    * @param {string} key - The notebook ID whose notes this method returns.
+   * @param {string} sort - The property to sort the notes by.
    * @returns {Promise}
    */
-  static getNotes(key) {
+  static getNotes(key, sort) {
     return new Promise((resolve, reject) => {
       Notebook.get(key).then((response) => {
         if (response.notes.length) {
           client.hmget('notes', response.notes, (err, reply) => {
-            resolve(sortNotes(err, reply, response.name))
+            resolve(sortNotes(err, reply, sort, 1, response.name))
           })
         } else {
           resolve({

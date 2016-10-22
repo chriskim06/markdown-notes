@@ -38,7 +38,7 @@ class Note {
    */
   static persist(note) {
     return new Promise((resolve, reject) => {
-      client.hset('notes', [`${note.id}`, JSON.stringify(note)], (err, reply) => {
+      client.send_command('hset', ['notes', [`${note.id}`, JSON.stringify(note)]], (err, reply) => {
         if (err) {
           reject(err)
         } else {
@@ -56,7 +56,7 @@ class Note {
    */
   static remove(key) {
     return new Promise((resolve, reject) => {
-      client.hdel('notes', key, (err, reply) => {
+      client.send_command('hdel', ['notes', key], (err, reply) => {
         if (err) {
           reject(err)
         } else {
@@ -103,7 +103,7 @@ class Note {
    */
   static get(key) {
     return new Promise((resolve, reject) => {
-      client.hget('notes', key, (err, reply) => {
+      client.send_command('hget', ['notes', key], (err, reply) => {
         if (err) {
           reject(err)
         } else {
@@ -116,24 +116,23 @@ class Note {
   /**
    * This gets all of the notes from the notes hash.
    *
+   * @param {string} sort - The property to sort the notes by.
+   * @param {number} asc - Sorts ascending if this is a truthy value.
    * @returns {Promise}
    */
-  static getAll() {
+  static getAll(sort, asc) {
     return new Promise((resolve, reject) => {
-      client.hgetall('notes', (err, reply) => {
+      client.send_command('hgetall', ['notes'], (err, reply) => {
         if (err) {
           reject(err)
         } else {
           let allNotes = []
           for (let note in reply) {
             if (reply.hasOwnProperty(note)) {
-              allNotes.push(note)
+              allNotes.push(reply[note])
             }
           }
-          resolve({
-            notes: sortNotes(err, reply, null),
-            all: allNotes
-          })
+          resolve(sortNotes(err, reply, sort, asc, null).notes)
         }
       })
     })

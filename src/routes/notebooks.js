@@ -24,12 +24,10 @@ router.get('/', (req, res, next) => {
  * GET all notes for a notebook
  */
 router.get('/notes/:id', (req, res, next) => {
-  Notebook.getNotes(req.params.id).then((response) => {
-    Note.getAll().then((notes) => {
-      render(null, res, next, 'notes', {id: req.params.id, title: response.notebook, notes: response.notes, all: notes.all, button: true})
-    }, (error) => {
-      next(error)
-    })
+  const p1 = Notebook.getNotes(req.params.id, 'edited')
+  const p2 = Note.getAll('title', 0)
+  Promise.all([p1, p2]).then((notes) => {
+    render(null, res, next, 'notes', {id: req.params.id, title: notes[0].notebook, notes: notes[0].notes, all: notes[1], button: true})
   }, (error) => {
     next(error)
   })
@@ -40,8 +38,8 @@ router.post('/notes/update', (req, res, next) => {
     if (err) {
       next(err)
     } else {
-      Notebook.getNotes(req.body.notebookId).then((response) => {
-        Note.getAll().then((notes) => {
+      Notebook.getNotes(req.body.notebookId, 'edited').then((response) => {
+        Note.getAll('title', 1).then((notes) => {
           render(null, res, next, 'notes', {id: req.params.id, title: response.notebook, notes: response.notes, all: notes.all, button: true})
         }, (error) => {
           next(error)
@@ -58,7 +56,7 @@ router.post('/notes/update', (req, res, next) => {
  */
 router.post('/create', (req, res, next) => {
   let notebook = new Notebook(req.body.title, [])
-  Notebook.persist(notebook).then((response) => {
+  Notebook.persist(notebook).then(() => {
     redirect(null, res, next, '/')
   }, (error) => {
     next(error)
@@ -69,7 +67,7 @@ router.post('/create', (req, res, next) => {
  * UPDATE an existing notebook
  */
 router.post('/edit', (req, res, next) => {
-  Notebook.update(req.body.notebookId, req.body.title, null, (err, reply) => {
+  Notebook.update(req.body.notebookId, req.body.title, null, (err) => {
     redirect(err, res, next, '/')
   })
 })
@@ -78,7 +76,7 @@ router.post('/edit', (req, res, next) => {
  * DELETE a notebook
  */
 router.post('/delete/:id', (req, res, next) => {
-  Notebook.remove(req.params.id).then((response) => {
+  Notebook.remove(req.params.id).then(() => {
     redirect(null, res, next, '/')
   }, (error) => {
     next(error)
