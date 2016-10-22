@@ -92,7 +92,8 @@ class Note {
         resolve(null)
       } else {
         client.send_command('hget', ['notes', key], (err, reply) => {
-          resolvePromise(err, Object.setPrototypeOf(JSON.parse(reply), Note.prototype), resolve, reject)
+          let o = Object.create(Note.prototype)
+          resolvePromise(err, Object.assign(o, JSON.parse(reply)), resolve, reject)
         })
       }
     })

@@ -87,7 +87,8 @@ class Notebook {
         resolve(null)
       } else {
         client.send_command('hget', ['notebooks', key], (err, reply) => {
-          resolvePromise(err, Object.setPrototypeOf(JSON.parse(reply), Notebook.prototype), resolve, reject)
+          let o = Object.create(Notebook.prototype)
+          resolvePromise(err, Object.assign(o, JSON.parse(reply)), resolve, reject)
         })
       }
     })
@@ -108,7 +109,8 @@ class Notebook {
           if (reply) {
             for (let obj in reply) {
               if (reply.hasOwnProperty(obj)) {
-                notebooks.push(Object.setPrototypeOf(JSON.parse(reply[obj]), Notebook.prototype))
+                let o = Object.create(Notebook.prototype)
+                notebooks.push(Object.assign(o, JSON.parse(reply[obj])))
               }
             }
             notebooks.sort((a, b) => a.name > b.name)
