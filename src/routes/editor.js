@@ -22,7 +22,8 @@ router.get('/add', (req, res, next) => {
     res.render('editor', {
       title: 'Add a new note!',
       action: '/notes/create',
-      notebooks: notebookOptions
+      notebooks: notebookOptions,
+      showNotebooks: true
     })
   }, (error) => {
     next(error)
@@ -52,8 +53,8 @@ router.get('/update/:id/:notebook?', (req, res, next) => {
         action: '/notes/update/' + req.params.id + '/' + req.params.notebook,
         name: data.title,
         note: data.content,
-        notebooks: notebookOptions,
-        selection: data.notebook
+        notebooks: [],
+        showNotebooks: false
       })
     }, (error) => {
       next(error)

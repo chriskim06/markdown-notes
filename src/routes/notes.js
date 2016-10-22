@@ -24,12 +24,10 @@ router.get('/', (req, res, next) => {
  * CREATE a new note
  */
 router.post('/create', (req, res, next) => {
-  let note = new Note(req.body.title, req.body.note, req.body.notebook)
-  Note.persist(note).then((response) => {
-    return Notebook.addNote(req.body.notebook, note.id)
-  }, (error) => {
-    next(error)
-  }).then((response) => {
+  let note = new Note(req.body.title, req.body.note)
+  const p1 = Note.persist(note)
+  const p2 = Notebook.addNote(req.body.notebook, note.id)
+  Promise.all([p1, p2]).then(() => {
     res.redirect('/notes')
   }, (error) => {
     next(error)
@@ -40,9 +38,11 @@ router.post('/create', (req, res, next) => {
  * UPDATE a note
  */
 router.post('/update/:id/:notebook?', (req, res, next) => {
-  Note.update(req.params.id, req.body.title, req.body.notebook, req.body.note, (err, data) => {
+  Note.update(req.params.id, req.body.title, req.body.notebook, req.body.note).then(() => {
     let location = (req.params.notebook === 'undefined' || req.params.notebook === '') ? '/notes' : '/notebooks/notes/' + req.params.notebook
-    redirect(err, res, next, location)
+    redirect(null, res, next, location)
+  }, (error) => {
+    next(error)
   })
 })
 
@@ -50,7 +50,7 @@ router.post('/update/:id/:notebook?', (req, res, next) => {
  * DELETE a note
  */
 router.post('/delete/:id', (req, res, next) => {
-  Note.remove(req.params.id).then((response) => {
+  Note.remove(req.params.id).then(() => {
     redirect(null, res, next, '/notes')
   }, (error) => {
     next(error)

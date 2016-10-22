@@ -48,8 +48,7 @@ router.post('/notes/update', (req, res, next) => {
  * CREATE a new notebook
  */
 router.post('/create', (req, res, next) => {
-  let notebook = new Notebook(req.body.title, [])
-  Notebook.persist(notebook).then(() => {
+  Notebook.persist(new Notebook(req.body.title, [])).then(() => {
     redirect(null, res, next, '/')
   }, (error) => {
     next(error)

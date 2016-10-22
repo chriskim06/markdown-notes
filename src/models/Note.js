@@ -20,13 +20,11 @@ class Note {
    * @constructor
    * @param {string} title - The title of the note.
    * @param {string} content - The markdown contents of the note.
-   * @param {string} notebook - The ID of the notebook this belongs to.
    */
-  constructor(title, content, notebook) {
+  constructor(title, content) {
     this.id = uuid()
     this.title = title
     this.content = content
-    this.notebook = notebook
     this.updated = Date.now()
   }
 
@@ -74,24 +72,20 @@ class Note {
    * @param {string} title - The new title to set.
    * @param {string} notebook - The new notebook ID to set.
    * @param {string} content - The content to set.
-   * @param {Function} fn - A callback function.
    */
-  static update(key, title, notebook, content, fn) {
-    Note.get(key).then((data) => {
-      if (data.notebook !== notebook) {
-        Notebook.addNote(notebook, data.id)
+  static update(key, title, notebook, content) {
+    const p1 = Notebook.get(notebook)
+    const p2 = Note.get(key)
+    return Promise.all([p1, p2]).then((response) => {
+      if (response[0] && !response[0].notes.includes(key)) {
+        Notebook.addNote(notebook, key)
       }
-      data.title = title
-      data.notebook = notebook
-      data.content = content
-      data.updated = Date.now()
-      return Note.persist(data)
+      response[1].title = title
+      response[1].content = content
+      response[1].updated = Date.now()
+      return Note.persist(response[1])
     }, (error) => {
-      fn(error, null)
-    }).then((response) => {
-      fn(null, response)
-    }, (error) => {
-      fn(error, null)
+      return Promise.reject(error)
     })
   }
 
