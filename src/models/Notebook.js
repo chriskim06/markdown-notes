@@ -152,7 +152,7 @@ class Notebook {
       Notebook.get(key).then((response) => {
         if (response.notes.length) {
           client.send_command('hmget', ['notes', response.notes], (err, reply) => {
-            resolve(sortNotes(err, reply, sort, asc, response.name))
+            resolve(sortNotes(reply, sort, asc, response.name))
           })
         } else {
           resolve({

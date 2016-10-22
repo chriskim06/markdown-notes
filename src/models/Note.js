@@ -130,7 +130,7 @@ class Note {
               allNotes.push(reply[note])
             }
           }
-          resolve(sortNotes(err, reply, sort, asc, null).notes)
+          resolve(sortNotes(reply, sort, asc, null).notes)
         }
       })
     })

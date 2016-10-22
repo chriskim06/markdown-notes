@@ -15,13 +15,12 @@ export const uuid = shortId.generate
  * of notes that will be used for rendering some react components. The
  * callback is passed an error object, the notes array, and the notebook id.
  *
- * @param {Object} err - The error object being passed along.
  * @param {Array} reply - The array of notes to sort.
  * @param {string} prop - The property to sort the notes by.
  * @param {number} asc - Sorts ascending if this is a truthy value.
  * @param {?string} notebook - The notebook ID.
  */
-export const sortNotes = (err, reply, prop, asc, notebook) => {
+export const sortNotes = (reply, prop, asc, notebook) => {
   let notes = []
   if (reply) {
     for (let obj in reply) {
