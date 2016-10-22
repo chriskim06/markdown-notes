@@ -24,7 +24,7 @@ router.get('/', (req, res, next) => {
  * GET all notes for a notebook
  */
 router.get('/notes/:id', (req, res, next) => {
-  const p1 = Notebook.getNotes(req.params.id, 'edited')
+  const p1 = Notebook.getNotes(req.params.id, 'edited', 1)
   const p2 = Note.getAll('title', 0)
   Promise.all([p1, p2]).then((notes) => {
     render(null, res, next, 'notes', {id: req.params.id, title: notes[0].notebook, notes: notes[0].notes, all: notes[1], button: true})
@@ -33,9 +33,12 @@ router.get('/notes/:id', (req, res, next) => {
   })
 })
 
+/**
+ * UPDATE the notes in a notebook
+ */
 router.post('/notes/update', (req, res, next) => {
   const p1 = Notebook.update(req.body.notebookId, null, req.body.notes)
-  const p2 = Notebook.getNotes(req.body.notebookId, 'edited')
+  const p2 = Notebook.getNotes(req.body.notebookId, 'edited', 1)
   const p3 = Note.getAll('title', 1)
   Promise.all([p1, p2, p3]).then(() => {
     redirect(null, res, next, `/notebooks/notes/${req.body.notebookId}`)
