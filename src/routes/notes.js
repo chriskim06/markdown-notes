@@ -5,7 +5,6 @@
 
 import Note from '../models/Note'
 import Notebook from '../models/Notebook'
-import { render, redirect } from '../util/handler'
 import { Router } from 'express'
 const router = Router()
 
@@ -14,7 +13,7 @@ const router = Router()
  */
 router.get('/', (req, res, next) => {
   Note.getAll('edited', 1).then((notes) => {
-    render(null, res, next, 'notes', {id: '', title: 'All Notes', notes: notes, all: [], button: false})
+    res.render('notes', {id: '', title: 'All Notes', notes: notes, all: [], button: false})
   }, (error) => {
     next(error)
   })
@@ -40,7 +39,7 @@ router.post('/create', (req, res, next) => {
 router.post('/update/:id/:notebook?', (req, res, next) => {
   Note.update(req.params.id, req.body.title, req.body.notebook, req.body.note).then(() => {
     let location = (req.params.notebook === 'undefined' || req.params.notebook === '') ? '/notes' : '/notebooks/notes/' + req.params.notebook
-    redirect(null, res, next, location)
+    res.redirect(location)
   }, (error) => {
     next(error)
   })
@@ -51,7 +50,7 @@ router.post('/update/:id/:notebook?', (req, res, next) => {
  */
 router.post('/delete/:id', (req, res, next) => {
   Note.remove(req.params.id).then(() => {
-    redirect(null, res, next, '/notes')
+    res.redirect('/notes')
   }, (error) => {
     next(error)
   })

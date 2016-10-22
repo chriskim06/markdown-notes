@@ -5,7 +5,6 @@
 
 import Note from '../models/Note'
 import Notebook from '../models/Notebook'
-import { render, redirect } from '../util/handler'
 import { Router } from 'express'
 const router = Router()
 
@@ -14,7 +13,7 @@ const router = Router()
  */
 router.get('/', (req, res, next) => {
   Notebook.getAll().then((response) => {
-    render(null, res, next, 'index', {notebookNames: response})
+    res.render('index', {notebookNames: response})
   }, (error) => {
     next(error)
   })
@@ -27,7 +26,7 @@ router.get('/notes/:id', (req, res, next) => {
   const p1 = Notebook.getNotes(req.params.id, 'edited', 1)
   const p2 = Note.getAll('title', 0)
   Promise.all([p1, p2]).then((notes) => {
-    render(null, res, next, 'notes', {id: req.params.id, title: notes[0].notebook, notes: notes[0].notes, all: notes[1], button: true})
+    res.render('notes', {id: req.params.id, title: notes[0].notebook, notes: notes[0].notes, all: notes[1], button: true})
   }, (error) => {
     next(error)
   })
@@ -41,7 +40,7 @@ router.post('/notes/update', (req, res, next) => {
   const p2 = Notebook.getNotes(req.body.notebookId, 'edited', 1)
   const p3 = Note.getAll('title', 1)
   Promise.all([p1, p2, p3]).then(() => {
-    redirect(null, res, next, `/notebooks/notes/${req.body.notebookId}`)
+    res.redirect(`/notebooks/notes/${req.body.notebookId}`)
   }, (error) => {
     next(error)
   })
@@ -52,7 +51,7 @@ router.post('/notes/update', (req, res, next) => {
  */
 router.post('/create', (req, res, next) => {
   Notebook.persist(new Notebook(req.body.title, [])).then(() => {
-    redirect(null, res, next, '/')
+    res.redirect('/')
   }, (error) => {
     next(error)
   })
@@ -63,7 +62,7 @@ router.post('/create', (req, res, next) => {
  */
 router.post('/edit', (req, res, next) => {
   Notebook.update(req.body.notebookId, req.body.title, null).then(() => {
-    redirect(null, res, next, '/')
+    res.redirect('/')
   }, (error) => {
     next(error)
   })
@@ -74,7 +73,7 @@ router.post('/edit', (req, res, next) => {
  */
 router.post('/delete/:id', (req, res, next) => {
   Notebook.remove(req.params.id).then(() => {
-    redirect(null, res, next, '/')
+    res.redirect('/')
   }, (error) => {
     next(error)
   })

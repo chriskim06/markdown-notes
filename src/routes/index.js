@@ -4,7 +4,6 @@
  */
 
 import Notebook from '../models/Notebook'
-import { render } from '../util/handler'
 import { Router } from 'express'
 const router = Router()
 
@@ -13,7 +12,7 @@ const router = Router()
  */
 router.get('/', (req, res, next) => {
   Notebook.getAll().then((response) => {
-    render(null, res, next, 'index', {notebookNames: response})
+    res.render('index', {notebookNames: response})
   }, (error) => {
     next(error)
   })
