@@ -97,13 +97,17 @@ class Note {
    */
   static get(key) {
     return new Promise((resolve, reject) => {
-      client.send_command('hget', ['notes', key], (err, reply) => {
-        if (err) {
-          reject(err)
-        } else {
-          resolve(JSON.parse(reply))
-        }
-      })
+      if (!key) {
+        resolve(null)
+      } else {
+        client.send_command('hget', ['notes', key], (err, reply) => {
+          if (err) {
+            reject(err)
+          } else {
+            resolve(JSON.parse(reply))
+          }
+        })
+      }
     })
   }
 

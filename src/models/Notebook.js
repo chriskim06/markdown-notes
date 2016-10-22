@@ -92,13 +92,17 @@ class Notebook {
    */
   static get(key) {
     return new Promise((resolve, reject) => {
-      client.send_command('hget', ['notebooks', key], (err, reply) => {
-        if (err) {
-          reject(err)
-        } else {
-          resolve(JSON.parse(reply))
-        }
-      })
+      if (!key) {
+        resolve(null)
+      } else {
+        client.send_command('hget', ['notebooks', key], (err, reply) => {
+          if (err) {
+            reject(err)
+          } else {
+            resolve(JSON.parse(reply))
+          }
+        })
+      }
     })
   }
 
@@ -140,14 +144,15 @@ class Notebook {
    *
    * @param {string} key - The notebook ID whose notes this method returns.
    * @param {string} sort - The property to sort the notes by.
+   * @param {number} asc - Sorts ascending if this is a truthy value.
    * @returns {Promise}
    */
-  static getNotes(key, sort) {
+  static getNotes(key, sort, asc) {
     return new Promise((resolve, reject) => {
       Notebook.get(key).then((response) => {
         if (response.notes.length) {
           client.send_command('hmget', ['notes', response.notes], (err, reply) => {
-            resolve(sortNotes(err, reply, sort, 1, response.name))
+            resolve(sortNotes(err, reply, sort, asc, response.name))
           })
         } else {
           resolve({
