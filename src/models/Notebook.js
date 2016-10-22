@@ -188,28 +188,6 @@ class Notebook {
     })
   }
 
-  /**
-   * This removes a note ID from this notebook's array of notes.
-   *
-   * @param {string} key - The ID of the notebook.
-   * @param {string} note - The note to remove.
-   * @returns {Promise}
-   */
-  static removeNote(key, note) {
-    return new Promise((resolve, reject) => {
-      Notebook.get(key).then((response) => {
-        response.notes.splice(response.notes.indexOf(note))
-        return Notebook.persist(response)
-      }, (error) => {
-        reject(error)
-      }).then((response) => {
-        resolve(response)
-      }, (error) => {
-        reject(error)
-      })
-    })
-  }
-
 }
 
 export default Notebook
