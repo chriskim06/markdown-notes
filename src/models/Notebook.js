@@ -28,16 +28,15 @@ class Notebook {
   /**
    * This saves a note to the notes hash in redis.
    *
-   * @param {Object} notebook - The notebook object to be saved.
    * @returns {Promise}
    */
-  static persist(notebook) {
+  persist() {
     return new Promise((resolve, reject) => {
-      client.send_command('hset', ['notebooks', [`${notebook.id}`, JSON.stringify(notebook)]], (err) => {
+      client.send_command('hset', ['notebooks', [`${this.id}`, JSON.stringify(this)]], (err) => {
         if (err) {
           reject(err)
         } else {
-          resolve(notebook)
+          resolve(this)
         }
       })
     })
@@ -78,7 +77,7 @@ class Notebook {
       if (notes && notes.length) {
         response.notes = notes
       }
-      return Notebook.persist(response)
+      return response.persist()
     }, (error) => {
       return Promise.reject(error)
     })
@@ -99,7 +98,7 @@ class Notebook {
           if (err) {
             reject(err)
           } else {
-            resolve(JSON.parse(reply))
+            resolve(Object.setPrototypeOf(JSON.parse(reply), Notebook.prototype))
           }
         })
       }
@@ -121,16 +120,10 @@ class Notebook {
           if (reply) {
             for (let obj in reply) {
               if (reply.hasOwnProperty(obj)) {
-                let notebook = JSON.parse(reply[obj])
-                notebooks.push({
-                  id: notebook.id,
-                  name: notebook.name
-                })
-                notebooks.sort((a, b) => {
-                  return a.name > b.name
-                })
+                notebooks.push(Object.setPrototypeOf(JSON.parse(reply[obj]), Notebook.prototype))
               }
             }
+            notebooks.sort((a, b) => a.name > b.name)
           }
           resolve(notebooks)
         }
@@ -174,17 +167,11 @@ class Notebook {
    * @returns {Promise}
    */
   static addNote(key, note) {
-    return new Promise((resolve, reject) => {
-      Notebook.get(key).then((response) => {
-        response.notes.push(note)
-        return Notebook.persist(response)
-      }, (error) => {
-        reject(error)
-      }).then((response) => {
-        resolve(response)
-      }, (error) => {
-        reject(error)
-      })
+    return Notebook.get(key).then((response) => {
+      response.notes.push(note)
+      return response.persist()
+    }, (error) => {
+      return Promise.reject(error)
     })
   }
 

@@ -31,7 +31,7 @@ client.on('error', (err) => {
  */
 client.send_command('hgetall', ['notebooks'], (err, reply) => {
   if (!reply || !Object.keys(reply).length) {
-    Notebook.persist(new Notebook('default')).then((response) => {
+    new Notebook('default').persist().then((response) => {
       console.log(`Saved new notebook: ${response}`)
     }, (error) => {
       console.error(error)

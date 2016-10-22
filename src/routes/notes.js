@@ -24,7 +24,7 @@ router.get('/', (req, res, next) => {
  */
 router.post('/create', (req, res, next) => {
   let note = new Note(req.body.title, req.body.note)
-  const p1 = Note.persist(note)
+  const p1 = note.persist()
   const p2 = Notebook.addNote(req.body.notebook, note.id)
   Promise.all([p1, p2]).then(() => {
     res.redirect('/notes')

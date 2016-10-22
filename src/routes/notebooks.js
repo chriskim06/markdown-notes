@@ -36,10 +36,7 @@ router.get('/notes/:id', (req, res, next) => {
  * UPDATE the notes in a notebook
  */
 router.post('/notes/update', (req, res, next) => {
-  const p1 = Notebook.update(req.body.notebookId, null, req.body.notes)
-  const p2 = Notebook.getNotes(req.body.notebookId, 'edited', 0)
-  const p3 = Note.getAll('title', 0)
-  Promise.all([p1, p2, p3]).then(() => {
+  Notebook.update(req.body.notebookId, null, req.body.notes).then(() => {
     res.redirect(`/notebooks/notes/${req.body.notebookId}`)
   }, (error) => {
     next(error)
@@ -50,7 +47,7 @@ router.post('/notes/update', (req, res, next) => {
  * CREATE a new notebook
  */
 router.post('/create', (req, res, next) => {
-  Notebook.persist(new Notebook(req.body.title, [])).then(() => {
+  new Notebook(req.body.title, []).persist().then(() => {
     res.redirect('/')
   }, (error) => {
     next(error)

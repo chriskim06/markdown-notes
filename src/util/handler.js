@@ -41,9 +41,9 @@ export const sortNotes = (reply, prop, asc, notebook) => {
           })
           notes.sort((a, b) => {
             if (asc) {
-              return a[prop].localeCompare(b[prop])
+              return a[prop] > b[prop]
             } else {
-              return b[prop].localeCompare(a[prop])
+              return a[prop] < b[prop]
             }
           })
         }

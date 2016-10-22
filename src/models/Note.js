@@ -31,16 +31,15 @@ class Note {
   /**
    * This saves a note to the notes hash in redis.
    *
-   * @param {Object} note - The note object to be saved.
    * @returns {Promise}
    */
-  static persist(note) {
+  persist() {
     return new Promise((resolve, reject) => {
-      client.send_command('hset', ['notes', [`${note.id}`, JSON.stringify(note)]], (err) => {
+      client.send_command('hset', ['notes', [`${this.id}`, JSON.stringify(this)]], (err) => {
         if (err) {
           reject(err)
         } else {
-          resolve(note)
+          resolve(this)
         }
       })
     })
@@ -83,7 +82,7 @@ class Note {
       response[1].title = title
       response[1].content = content
       response[1].updated = Date.now()
-      return Note.persist(response[1])
+      return response[1].persist()
     }, (error) => {
       return Promise.reject(error)
     })
@@ -104,7 +103,7 @@ class Note {
           if (err) {
             reject(err)
           } else {
-            resolve(JSON.parse(reply))
+            resolve(Object.setPrototypeOf(JSON.parse(reply), Note.prototype))
           }
         })
       }
