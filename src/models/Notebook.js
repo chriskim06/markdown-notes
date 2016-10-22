@@ -4,7 +4,7 @@
  */
 
 import client from './db'
-import { sortNotes, uuid } from '../util/helper'
+import { sortNotes, resolvePromise, uuid } from '../util/helper'
 
 /**
  * Describes notebooks and contains methods for handling them.
@@ -33,11 +33,7 @@ class Notebook {
   persist() {
     return new Promise((resolve, reject) => {
       client.send_command('hset', ['notebooks', `${this.id}`, JSON.stringify(this)], (err) => {
-        if (err) {
-          reject(err)
-        } else {
-          resolve(this)
-        }
+        resolvePromise(err, this, resolve, reject)
       })
     })
   }
@@ -51,11 +47,7 @@ class Notebook {
   static remove(key) {
     return new Promise((resolve, reject) => {
       client.send_command('hdel', ['notebooks', key], (err, reply) => {
-        if (err) {
-          reject(err)
-        } else {
-          resolve(reply)
-        }
+        resolvePromise(err, reply, resolve, reject)
       })
     })
   }
@@ -95,11 +87,7 @@ class Notebook {
         resolve(null)
       } else {
         client.send_command('hget', ['notebooks', key], (err, reply) => {
-          if (err) {
-            reject(err)
-          } else {
-            resolve(Object.setPrototypeOf(JSON.parse(reply), Notebook.prototype))
-          }
+          resolvePromise(err, Object.setPrototypeOf(JSON.parse(reply), Notebook.prototype), resolve, reject)
         })
       }
     })
