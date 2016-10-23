@@ -28,7 +28,7 @@ router.post('/create', (req, res, next) => {
   const p2 = Notebook.addNote(req.body.notebook, note.id)
   Promise.all([p1, p2]).then(() => {
     res.redirect('/notes')
-  }, (error) => {
+  }).catch((error) => {
     next(error)
   })
 })
@@ -40,7 +40,7 @@ router.post('/update/:id/:notebook?', (req, res, next) => {
   const params = req.params
   const body = req.body
   Note.update(params.id, body.title, body.notebook, body.note).then(() => {
-    let location = (params.notebook === 'undefined' || params.notebook === '') ? '/notes' : '/notebooks/notes/' + params.notebook
+    const location = (params.notebook === 'undefined' || params.notebook === '') ? '/notes' : '/notebooks/notes/' + params.notebook
     res.redirect(location)
   }, (error) => {
     next(error)

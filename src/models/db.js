@@ -19,24 +19,25 @@ exec('redis-server ../redis.conf', (error, stdout, stderr) => {
 
 const client = redis.createClient()
 
-client.on('connect', () => {
-  console.log('Connected')
-})
-client.on('error', (err) => {
-  console.log(`Error: ${err}`)
-})
-
 /**
  * Initializes with one notebook if the hash is empty.
  */
-client.send_command('hgetall', ['notebooks'], (err, reply) => {
-  if (!reply || !Object.keys(reply).length) {
-    new Notebook('default').persist().then((response) => {
-      console.log(`Saved new notebook: ${response}`)
-    }, (error) => {
-      console.error(error)
-    })
-  }
+client.on('connect', () => {
+  console.log('Connected')
+  Notebook.getAll().then((response) => {
+    if (!response.length) {
+      new Notebook('default').persist().then((response) => {
+        console.log(`Saved new notebook: ${response}`)
+      }, (error) => {
+        console.error(error)
+      })
+    }
+  }, (error) => {
+    console.error(error)
+  })
+})
+client.on('error', (err) => {
+  console.log(`Error: ${err}`)
 })
 
 export default client

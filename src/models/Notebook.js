@@ -4,7 +4,10 @@
  */
 
 import client from './db'
-import { sortNotes, resolvePromise, uuid } from '../util/helper'
+import { sortNotes, resolvePromise, cast, uuid } from '../util/helper'
+
+const nb = 'notebooks'
+const nb_set = 'notebook_id_set'
 
 /**
  * Describes notebooks and contains methods for handling them.
@@ -17,37 +20,42 @@ class Notebook {
    *
    * @constructor
    * @param {string} name - The visible title of the notebook.
-   * @param {Array} notes - An array of note IDs associated with the notebook.
    */
-  constructor(name, notes = []) {
+  constructor(name) {
     this.id = uuid()
     this.name = name
-    this.notes = notes
+    this.notes = "[]"
   }
 
   /**
-   * This saves a note to the notes hash in redis.
+   * This saves a notebook hash in redis.
    *
    * @returns {Promise}
    */
   persist() {
     return new Promise((resolve, reject) => {
-      client.send_command('hset', ['notebooks', `${this.id}`, JSON.stringify(this)], (err) => {
+      client.send_command('hmset', [`${nb}:${this.id}`, this], (err) => {
+        if (!err) {
+          client.send_command('sadd', [nb_set, this.id])
+        }
         resolvePromise(err, this, resolve, reject)
       })
     })
   }
 
   /**
-   * This removes a note from the redis hash.
+   * This removes a notebook hash from redis.
    *
    * @param {string} key - The ID of the notebook to be deleted.
    * @returns {Promise}
    */
   static remove(key) {
     return new Promise((resolve, reject) => {
-      client.send_command('hdel', ['notebooks', key], (err, reply) => {
-        resolvePromise(err, reply, resolve, reject)
+      client.multi([
+        ['del', `${nb}:${key}`],
+        ['srem', nb_set, key]
+      ]).exec((err, replies) => {
+        resolvePromise(err, replies[0], resolve, reject)
       })
     })
   }
@@ -67,7 +75,7 @@ class Notebook {
         response.name = name
       }
       if (notes && notes.length) {
-        response.notes = notes
+        response.notes = JSON.stringify(notes)
       }
       return response.persist()
     }, (error) => {
@@ -86,36 +94,40 @@ class Notebook {
       if (!key) {
         resolve(null)
       } else {
-        client.send_command('hget', ['notebooks', key], (err, reply) => {
-          let o = Object.create(Notebook.prototype)
-          resolvePromise(err, Object.assign(o, JSON.parse(reply)), resolve, reject)
+        client.send_command('hgetall', [`${nb}:${key}`], (err, reply) => {
+          resolvePromise(err, cast(reply, Notebook.prototype), resolve, reject)
         })
       }
     })
   }
 
   /**
-   * This gets all of the notebooks in the redis hash.
+   * This gets all of the notebooks from redis.
    *
    * @returns {Promise}
    */
   static getAll() {
     return new Promise((resolve, reject) => {
-      client.send_command('hgetall', ['notebooks'], (err, reply) => {
+      client.send_command('smembers', [nb_set], (err, reply) => {
         if (err) {
           reject(err)
-        } else {
-          let notebooks = []
-          if (reply) {
-            for (let obj in reply) {
-              if (reply.hasOwnProperty(obj)) {
-                let o = Object.create(Notebook.prototype)
-                notebooks.push(Object.assign(o, JSON.parse(reply[obj])))
-              }
+        } else if (reply && reply.length) {
+          let cmds = []
+          reply.forEach((id) => {
+            cmds.push(['hgetall', `${nb}:${id}`])
+          })
+          client.multi(cmds).exec((err, replies) => {
+            let notebooks = []
+            if (replies && replies.length) {
+              replies.forEach((entry) => {
+                notebooks.push(cast(entry, Notebook.prototype))
+              })
+              notebooks.sort((a, b) => a.name > b.name)
             }
-            notebooks.sort((a, b) => a.name > b.name)
-          }
-          resolve(notebooks)
+            resolve(notebooks)
+          })
+        } else {
+          resolve(null)
         }
       })
     })
@@ -133,9 +145,15 @@ class Notebook {
   static getNotes(key, sort, asc) {
     return new Promise((resolve, reject) => {
       Notebook.get(key).then((response) => {
-        if (response.notes.length) {
-          client.send_command('hmget', ['notes', response.notes], (err, reply) => {
-            resolve(sortNotes(reply, sort, asc, response.name))
+        if (response.notes && response.notes !== '[]') {
+          const cmds = []
+          const ids = JSON.parse(response.notes)
+          ids.forEach((id) => {
+            cmds.push(['hgetall', `notes:${id}`])
+          })
+          client.multi(cmds).exec((err, replies) => {
+            const x = sortNotes(replies, sort, asc, response.name)
+            resolve(x)
           })
         } else {
           resolve({
@@ -158,8 +176,15 @@ class Notebook {
    */
   static addNote(key, note) {
     return Notebook.get(key).then((response) => {
-      response.notes.push(note)
-      return response.persist()
+      if (response && response.notes) {
+        const parsed = JSON.parse(response.notes)
+        if (!parsed.includes(note)) {
+          parsed.push(note)
+          response.notes = JSON.stringify(parsed)
+          return response.persist()
+        }
+      }
+      return Promise.resolve()
     }, (error) => {
       return Promise.reject(error)
     })

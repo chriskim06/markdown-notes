@@ -28,6 +28,20 @@ export const resolvePromise = (error, response, resolve, reject) => {
 }
 
 /**
+ * This should be used when retrieving hashes from redis. The objects returned
+ * from the database are missing some prototype methods so its necessary to
+ * cast a new object with the desired prototype and then copy over the values.
+ *
+ * @param {Object} src - The object retrieved from redis.
+ * @param {Object} prototype - The prototype of the object to use.
+ * @returns {Object}
+ */
+export const cast = (src, prototype) => {
+  const o = Object.create(prototype)
+  return Object.assign(o, src)
+}
+
+/**
  * This executes the callback that it gets passed after building an array
  * of notes that will be used for rendering some react components. The
  * callback is passed an error object, the notes array, and the notebook id.
@@ -38,27 +52,22 @@ export const resolvePromise = (error, response, resolve, reject) => {
  * @param {?string} notebook - The notebook ID.
  */
 export const sortNotes = (reply, prop, asc, notebook) => {
-  let notes = []
-  if (reply) {
-    for (let obj in reply) {
-      if (reply.hasOwnProperty(obj)) {
-        let note = JSON.parse(reply[obj])
-        if (note) {
-          let time = new Date(note.updated)
-          let condensed = note.content.substr(0, 100)
-          if (condensed.length === 100) {
-            condensed += '...'
-          }
-          notes.push({
-            id: note.id,
-            title: note.title,
-            summary: condensed,
-            content: note.content,
-            edited: time.toLocaleString()
-          })
-        }
+  const notes = []
+  if (reply && reply.length) {
+    reply.forEach((note) => {
+      let time = new Date(parseInt(note.updated, 10))
+      let condensed = note.content.substr(0, 100)
+      if (condensed.length === 100) {
+        condensed += '...'
       }
-    }
+      notes.push({
+        id: note.id,
+        title: note.title,
+        summary: condensed,
+        content: note.content,
+        edited: time.toLocaleString()
+      })
+    })
     notes.sort((a, b) => {
       if (asc) {
         return a[prop] > b[prop]

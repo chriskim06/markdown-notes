@@ -5,7 +5,10 @@
 
 import client from './db'
 import Notebook from './Notebook'
-import { sortNotes, resolvePromise, uuid } from '../util/helper'
+import { sortNotes, resolvePromise, cast, uuid } from '../util/helper'
+
+const n = 'notes'
+const n_set = 'notes_id_set'
 
 /**
  * Describes notes and contains methods for handling them.
@@ -35,7 +38,10 @@ class Note {
    */
   persist() {
     return new Promise((resolve, reject) => {
-      client.send_command('hset', ['notes', `${this.id}`, JSON.stringify(this)], (err) => {
+      client.send_command('hmset', [`${n}:${this.id}`, this], (err) => {
+        if (!err) {
+          client.send_command('sadd', [n_set, this.id])
+        }
         resolvePromise(err, this, resolve, reject)
       })
     })
@@ -49,8 +55,11 @@ class Note {
    */
   static remove(key) {
     return new Promise((resolve, reject) => {
-      client.send_command('hdel', ['notes', key], (err, reply) => {
-        resolvePromise(err, reply, resolve, reject)
+      client.multi([
+        ['del', `${n}:${key}`],
+        ['srem', n_set, key]
+      ]).exec((err, replies) => {
+        resolvePromise(err, replies[0], resolve, reject)
       })
     })
   }
@@ -68,9 +77,7 @@ class Note {
     const p1 = Notebook.get(notebook)
     const p2 = Note.get(key)
     return Promise.all([p1, p2]).then((response) => {
-      if (response[0] && !response[0].notes.includes(key)) {
-        Notebook.addNote(notebook, key)
-      }
+      Notebook.addNote(notebook, key)
       response[1].title = title
       response[1].content = content
       response[1].updated = Date.now()
@@ -91,16 +98,15 @@ class Note {
       if (!key) {
         resolve(null)
       } else {
-        client.send_command('hget', ['notes', key], (err, reply) => {
-          let o = Object.create(Note.prototype)
-          resolvePromise(err, Object.assign(o, JSON.parse(reply)), resolve, reject)
+        client.send_command('hgetall', [`${n}:${key}`], (err, reply) => {
+          resolvePromise(err, cast(reply, Note.prototype), resolve, reject)
         })
       }
     })
   }
 
   /**
-   * This gets all of the notes from the notes hash.
+   * This gets all of the notes from redis.
    *
    * @param {string} sort - The property to sort the notes by.
    * @param {number} asc - Sorts ascending if this is a truthy value.
@@ -108,17 +114,22 @@ class Note {
    */
   static getAll(sort, asc) {
     return new Promise((resolve, reject) => {
-      client.send_command('hgetall', ['notes'], (err, reply) => {
+      client.send_command('smembers', [n_set], (err, reply) => {
         if (err) {
           reject(err)
         } else {
-          let allNotes = []
-          for (let note in reply) {
-            if (reply.hasOwnProperty(note)) {
-              allNotes.push(reply[note])
-            }
+          if (reply && reply.length) {
+            let cmds = []
+            reply.forEach((id) => {
+              cmds.push(['hgetall', `${n}:${id}`])
+            })
+            client.multi(cmds).exec((err, replies) => {
+              let x = sortNotes(replies, sort, asc, null)
+              resolve(x.notes)
+            })
+          } else {
+            resolve(null)
           }
-          resolve(sortNotes(reply, sort, asc, null).notes)
         }
       })
     })

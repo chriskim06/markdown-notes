@@ -27,7 +27,7 @@ router.get('/notes/:id', (req, res, next) => {
   const p2 = Note.getAll('title', 1)
   Promise.all([p1, p2]).then((notes) => {
     res.render('notes', {id: req.params.id, title: notes[0].notebook, notes: notes[0].notes, all: notes[1], button: true})
-  }, (error) => {
+  }).catch((error) => {
     next(error)
   })
 })
@@ -47,7 +47,7 @@ router.post('/notes/update', (req, res, next) => {
  * CREATE a new notebook
  */
 router.post('/create', (req, res, next) => {
-  new Notebook(req.body.title, []).persist().then(() => {
+  new Notebook(req.body.title).persist().then(() => {
     res.redirect('/')
   }, (error) => {
     next(error)
