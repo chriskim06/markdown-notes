@@ -24,9 +24,9 @@ router.get('/', (req, res, next) => {
  */
 router.post('/create', (req, res, next) => {
   const note = new Note(req.body.title, req.body.note)
-  const p1 = note.persist()
-  const p2 = Notebook.addNote(req.body.notebook, note.id)
-  Promise.all([p1, p2]).then(() => {
+  const p0 = note.persist()
+  const p1 = Notebook.addNote(req.body.notebook, note.id)
+  Promise.all([p0, p1]).then(() => {
     res.redirect('/notes')
   }).catch((error) => {
     next(error)

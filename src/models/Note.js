@@ -74,9 +74,9 @@ class Note {
    * @param {string} content - The content to set.
    */
   static update(key, title, notebook, content) {
-    const p1 = Notebook.get(notebook)
-    const p2 = Note.get(key)
-    return Promise.all([p1, p2]).then((response) => {
+    const p0 = Notebook.get(notebook)
+    const p1 = Note.get(key)
+    return Promise.all([p0, p1]).then((response) => {
       response[0].addNote(key)
       response[1].title = title
       response[1].content = content

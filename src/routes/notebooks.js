@@ -23,9 +23,9 @@ router.get('/', (req, res, next) => {
  * GET all notes for a notebook
  */
 router.get('/notes/:id', (req, res, next) => {
-  const p1 = Notebook.getNotes(req.params.id, 'edited', 0)
-  const p2 = Note.getAll('title', 1)
-  Promise.all([p1, p2]).then((notes) => {
+  const p0 = Notebook.getNotes(req.params.id, 'edited', 0)
+  const p1 = Note.getAll('title', 1)
+  Promise.all([p0, p1]).then((notes) => {
     res.render('notes', {id: req.params.id, title: notes[0].notebook, notes: notes[0].notes, all: notes[1], button: true})
   }).catch((error) => {
     next(error)
