@@ -42,9 +42,9 @@ export const cast = (src, prototype) => {
 }
 
 /**
- * This executes the callback that it gets passed after building an array
- * of notes that will be used for rendering some react components. The
- * callback is passed an error object, the notes array, and the notebook id.
+ * This returns a notes array in ascending/descending order based on the
+ * supplied property to sort by. An empty array is returned if there is
+ * nothing to sort.
  *
  * @param {Array} reply - The array of notes to sort.
  * @param {string} prop - The property to sort the notes by.
@@ -52,23 +52,16 @@ export const cast = (src, prototype) => {
  * @returns {Array}
  */
 export const sortNotes = (reply, prop, asc) => {
-  const notes = []
   if (reply && reply.length) {
     reply.forEach((note) => {
-      let time = new Date(parseInt(note.updated, 10))
       let condensed = note.content.substr(0, 100)
       if (condensed.length === 100) {
         condensed += '...'
       }
-      notes.push({
-        id: note.id,
-        title: note.title,
-        summary: condensed,
-        content: note.content,
-        edited: time.toLocaleString()
-      })
+      note.summary = condensed
+      note.edited = note.updated
     })
-    notes.sort((a, b) => {
+    return reply.sort((a, b) => {
       if (asc) {
         return a[prop] > b[prop]
       } else {
@@ -76,5 +69,5 @@ export const sortNotes = (reply, prop, asc) => {
       }
     })
   }
-  return notes
+  return []
 }

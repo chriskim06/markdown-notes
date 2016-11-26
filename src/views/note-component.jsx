@@ -16,12 +16,13 @@ const style = {
 export default React.createClass({
   render() {
     let data = this.props.data
+    let edited = new Date(parseInt(data.edited, 10)).toLocaleString()
     return (
       <div>
         <div className="panel panel-default">
           <div className="panel-heading clearfix">
             <h3 className="panel-title pull-left">
-              {'(' + data.edited + ') '}<span className="note-title">{data.title}</span>
+              {'(' + edited + ') '}<span className="note-title">{data.title}</span>
             </h3>
           </div>
           <div className="panel-body">

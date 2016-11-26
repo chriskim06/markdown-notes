@@ -77,7 +77,9 @@ class Note {
     const p0 = Notebook.get(notebook)
     const p1 = Note.get(key)
     return Promise.all([p0, p1]).then((response) => {
-      response[0].addNote(key)
+      if (response[0] != null) {
+        response[0].addNote(key)
+      }
       response[1].title = title
       response[1].content = content
       response[1].updated = Date.now()

@@ -13,16 +13,10 @@ const router = Router()
  */
 router.get('/add', (req, res, next) => {
   Notebook.getAll().then((response) => {
-    let notebookOptions = []
-    for (let obj in response) {
-      if (response.hasOwnProperty(obj)) {
-        notebookOptions.push(response[obj])
-      }
-    }
     res.render('editor', {
       title: 'Add a new note!',
       action: '/notes/create',
-      notebooks: notebookOptions,
+      notebooks: response,
       showNotebooks: true
     })
   }, (error) => {
@@ -34,11 +28,10 @@ router.get('/add', (req, res, next) => {
  * GET edit page
  */
 router.get('/update/:id/:notebook?', (req, res, next) => {
-  let params = req.params
-  Note.get(params.id).then((response) => {
+  Note.get(req.params.id).then((response) => {
     res.render('editor', {
       title: 'Update this note',
-      action: `/notes/update/${params.id}/${params.notebook}`,
+      action: `/notes/update/${req.params.id}/${req.params.notebook}`,
       name: response.title,
       note: response.content,
       showNotebooks: false

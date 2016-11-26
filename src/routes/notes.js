@@ -37,10 +37,9 @@ router.post('/create', (req, res, next) => {
  * UPDATE a note
  */
 router.post('/update/:id/:notebook?', (req, res, next) => {
-  const params = req.params
-  const body = req.body
-  Note.update(params.id, body.title, body.notebook, body.note).then(() => {
-    const location = (params.notebook === 'undefined' || params.notebook === '') ? '/notes' : '/notebooks/notes/' + params.notebook
+  Note.update(req.params.id, req.body.title, req.body.notebook, req.body.note).then(() => {
+    const notebook = req.params.notebook
+    const location = (notebook === 'undefined' || notebook === '') ? '/notes' : '/notebooks/notes/' + notebook
     res.redirect(location)
   }, (error) => {
     next(error)
