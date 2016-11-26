@@ -4,7 +4,8 @@
  */
 
 import client from './db'
-import { sortNotes, resolvePromise, cast, uuid } from '../util/helper'
+import Model from './Model'
+import { sortNotes } from '../util/helper'
 
 const nb = 'notebooks'
 const nb_set = 'notebook_id_set'
@@ -12,7 +13,7 @@ const nb_set = 'notebook_id_set'
 /**
  * Describes notebooks and contains methods for handling them.
  */
-class Notebook {
+class Notebook extends Model {
 
   /**
    * Notebooks are simple. They only have a title and a list of
@@ -22,7 +23,7 @@ class Notebook {
    * @param {string} name - The visible title of the notebook.
    */
   constructor(name) {
-    this.id = uuid()
+    super(nb, nb_set)
     this.name = name
     this.notes = '[]'
   }
@@ -31,16 +32,10 @@ class Notebook {
    * This saves a notebook hash in redis.
    *
    * @returns {Promise}
+   * @see Model#persist
    */
   persist() {
-    return new Promise((resolve, reject) => {
-      client.send_command('hmset', [`${nb}:${this.id}`, this], (err) => {
-        if (!err) {
-          client.send_command('sadd', [nb_set, this.id])
-        }
-        resolvePromise(err, this, resolve, reject)
-      })
-    })
+    return super.persist()
   }
 
   /**
@@ -53,7 +48,7 @@ class Notebook {
     if (!parsed.includes(note)) {
       parsed.push(note)
       this.notes = JSON.stringify(parsed)
-      this.persist()
+      super.persist()
     }
   }
 
@@ -62,16 +57,10 @@ class Notebook {
    *
    * @param {string} key - The ID of the notebook to be deleted.
    * @returns {Promise}
+   * @see Model#remove
    */
   static remove(key) {
-    return new Promise((resolve, reject) => {
-      client.multi([
-        ['del', `${nb}:${key}`],
-        ['srem', nb_set, key]
-      ]).exec((err, replies) => {
-        resolvePromise(err, replies[0], resolve, reject)
-      })
-    })
+    return super.remove(key, nb, nb_set)
   }
 
   /**
@@ -102,46 +91,28 @@ class Notebook {
    *
    * @param {string} key - The ID of the notebook.
    * @returns {Promise}
+   * @see Model#get
    */
   static get(key) {
-    return new Promise((resolve, reject) => {
-      if (!key) {
-        resolve(null)
-      } else {
-        client.send_command('hgetall', [`${nb}:${key}`], (err, reply) => {
-          resolvePromise(err, cast(reply, Notebook.prototype), resolve, reject)
-        })
-      }
-    })
+    return super.get(key, nb, Notebook.prototype)
   }
 
   /**
    * This gets all of the notebooks from redis.
    *
    * @returns {Promise}
+   * @see Model#getAll
    */
   static getAll() {
     return new Promise((resolve, reject) => {
-      client.send_command('smembers', [nb_set], (err, reply) => {
+      super.getAll(nb, nb_set, (err, replies) => {
         if (err) {
           reject(err)
-        } else if (reply && reply.length) {
-          let cmds = []
-          reply.forEach((id) => {
-            cmds.push(['hgetall', `${nb}:${id}`])
-          })
-          client.multi(cmds).exec((err, replies) => {
-            let notebooks = []
-            if (replies && replies.length) {
-              replies.forEach((entry) => {
-                notebooks.push(cast(entry, Notebook.prototype))
-              })
-              notebooks.sort((a, b) => a.name > b.name)
-            }
-            resolve(notebooks)
-          })
         } else {
-          resolve(null)
+          if (replies && replies.length) {
+            replies.sort((a, b) => a.name > b.name)
+          }
+          resolve(replies)
         }
       })
     })

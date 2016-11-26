@@ -3,9 +3,9 @@
  * @author Chris
  */
 
-import client from './db'
+import Model from './Model'
 import Notebook from './Notebook'
-import { sortNotes, resolvePromise, cast, uuid } from '../util/helper'
+import { sortNotes } from '../util/helper'
 
 const n = 'notes'
 const n_set = 'notes_id_set'
@@ -13,7 +13,7 @@ const n_set = 'notes_id_set'
 /**
  * Describes notes and contains methods for handling them.
  */
-class Note {
+class Note extends Model {
 
   /**
    * This instantiates a single note which can later be saved in redis.
@@ -25,7 +25,7 @@ class Note {
    * @param {string} content - The markdown contents of the note.
    */
   constructor(title, content) {
-    this.id = uuid()
+    super(n, n_set)
     this.title = title
     this.content = content
     this.updated = Date.now()
@@ -35,16 +35,10 @@ class Note {
    * This saves a note to the notes hash in redis.
    *
    * @returns {Promise}
+   * @see Model#persist
    */
   persist() {
-    return new Promise((resolve, reject) => {
-      client.send_command('hmset', [`${n}:${this.id}`, this], (err) => {
-        if (!err) {
-          client.send_command('sadd', [n_set, this.id])
-        }
-        resolvePromise(err, this, resolve, reject)
-      })
-    })
+    return super.persist()
   }
 
   /**
@@ -52,16 +46,10 @@ class Note {
    *
    * @param {string} key - The ID of the note to be deleted.
    * @returns {Promise}
+   * @see Model#remove
    */
   static remove(key) {
-    return new Promise((resolve, reject) => {
-      client.multi([
-        ['del', `${n}:${key}`],
-        ['srem', n_set, key]
-      ]).exec((err, replies) => {
-        resolvePromise(err, replies[0], resolve, reject)
-      })
-    })
+    return super.remove(key, n, n_set)
   }
 
   /**
@@ -94,17 +82,10 @@ class Note {
    *
    * @param key - The ID of the note.
    * @returns {Promise}
+   * @see Model#get
    */
   static get(key) {
-    return new Promise((resolve, reject) => {
-      if (!key) {
-        resolve(null)
-      } else {
-        client.send_command('hgetall', [`${n}:${key}`], (err, reply) => {
-          resolvePromise(err, cast(reply, Note.prototype), resolve, reject)
-        })
-      }
-    })
+    return super.get(key, n, Notebook.prototype)
   }
 
   /**
@@ -113,24 +94,15 @@ class Note {
    * @param {string} sort - The property to sort the notes by.
    * @param {number} asc - Sorts ascending if this is a truthy value.
    * @returns {Promise}
+   * @see Model#getAll
    */
   static getAll(sort, asc) {
     return new Promise((resolve, reject) => {
-      client.send_command('smembers', [n_set], (err, reply) => {
+      super.getAll(n, n_set, (err, replies) => {
         if (err) {
           reject(err)
         } else {
-          if (reply && reply.length) {
-            let cmds = []
-            reply.forEach((id) => {
-              cmds.push(['hgetall', `${n}:${id}`])
-            })
-            client.multi(cmds).exec((err, replies) => {
-              resolve(sortNotes(replies, sort, asc))
-            })
-          } else {
-            resolve(null)
-          }
+          resolve(sortNotes(replies, sort, asc))
         }
       })
     })
