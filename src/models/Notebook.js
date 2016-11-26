@@ -24,7 +24,7 @@ class Notebook {
   constructor(name) {
     this.id = uuid()
     this.name = name
-    this.notes = "[]"
+    this.notes = '[]'
   }
 
   /**
@@ -88,7 +88,7 @@ class Notebook {
       if (name) {
         response.name = name
       }
-      if (notes && notes.length) {
+      if (notes && notes.constructor === Array) {
         response.notes = JSON.stringify(notes)
       }
       response.persist()

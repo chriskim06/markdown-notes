@@ -37,7 +37,9 @@ router.get('/notes/:id', (req, res, next) => {
  */
 router.post('/notes/update', (req, res, next) => {
   let notes = req.body.notes
-  if (req.body.notes.constructor !== Array) {
+  if (notes == null) {
+    notes = []
+  } else if (notes.constructor !== Array) {
     notes = [req.body.notes]
   }
   Notebook.update(req.body.notebookId, null, notes).then(() => {
