@@ -7,7 +7,7 @@ import React from 'react'
 import NoteComponent from './note-component'
 import DefaultLayout from './layouts/default'
 
-export default React.createClass({
+class Notes extends React.Component {
   render() {
     let content = this.props.notes.map((note) => {
       return <NoteComponent key={note.id} data={note} notebook={this.props.id} />
@@ -62,4 +62,6 @@ export default React.createClass({
       </DefaultLayout>
     )
   }
-})
+}
+
+export default Notes

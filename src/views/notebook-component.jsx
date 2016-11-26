@@ -7,7 +7,7 @@ import React from 'react'
 import NotebookName from './notebook-name'
 import NotebookActions from './notebook-actions'
 
-export default React.createClass({
+class NotebookComponent extends React.Component {
   render() {
     let notebookId = this.props.data.id
     let notebookName = this.props.data.name
@@ -18,4 +18,6 @@ export default React.createClass({
       </div>
     )
   }
-})
+}
+
+export default NotebookComponent

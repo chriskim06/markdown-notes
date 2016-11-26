@@ -5,7 +5,7 @@
 
 import React from 'react'
 
-export default React.createClass({
+class DefaultLayout extends React.Component {
   render() {
     return (
       <html>
@@ -47,5 +47,6 @@ export default React.createClass({
       </html>
     )
   }
-})
+}
 
+export default DefaultLayout

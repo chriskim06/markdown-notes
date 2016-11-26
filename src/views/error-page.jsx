@@ -6,14 +6,14 @@
 import React from 'react'
 import DefaultLayout from './layouts/default'
 
-export default React.createClass({
+class ErrorPage extends React.Component {
   printOutput() {
     if (this.props.err.length > 0) {
       return <pre>{this.props.err}</pre>
     } else {
       return <p>{this.props.message}</p>
     }
-  },
+  }
   render() {
     return (
       <DefaultLayout>
@@ -25,4 +25,6 @@ export default React.createClass({
       </DefaultLayout>
     )
   }
-})
+}
+
+export default ErrorPage

@@ -78,7 +78,7 @@ if (app.get('env') === 'development') {
 const handleError = (err, res, data) => {
   console.error(err.stack)
   res.status(err.status || 500)
-  res.render('error', {
+  res.render('error-page', {
     statusCode: res.statusCode,
     message: err.message,
     err: data

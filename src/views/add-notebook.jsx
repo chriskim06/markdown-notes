@@ -5,7 +5,7 @@
 
 import React from 'react'
 
-export default React.createClass({
+class AddNotebook extends React.Component {
   render() {
     return (
       <div id="addNotebook" className="modal fade" role="dialog">
@@ -26,4 +26,6 @@ export default React.createClass({
       </div>
     )
   }
-})
+}
+
+export default AddNotebook

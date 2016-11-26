@@ -6,7 +6,7 @@
 import React from 'react'
 import DefaultLayout from './layouts/default'
 
-export default React.createClass({
+class Editor extends React.Component {
   render() {
     return (
       <DefaultLayout>
@@ -51,5 +51,6 @@ export default React.createClass({
       </DefaultLayout>
     )
   }
-})
+}
 
+export default Editor

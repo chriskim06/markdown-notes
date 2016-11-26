@@ -12,7 +12,7 @@ const style = {
   color: '#fff'
 }
 
-export default React.createClass({
+class NotebookActions extends React.Component {
   render() {
     let props = this.props
     return (
@@ -48,4 +48,6 @@ export default React.createClass({
       </div>
     )
   }
-})
+}
+
+export default NotebookActions

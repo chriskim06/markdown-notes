@@ -13,7 +13,7 @@ const style = {
   color: '#fff'
 }
 
-export default React.createClass({
+class NoteComponent extends React.Component {
   render() {
     let data = this.props.data
     let edited = new Date(parseInt(data.edited, 10)).toLocaleString()
@@ -45,4 +45,6 @@ export default React.createClass({
       </div>
     )
   }
-})
+}
+
+export default NoteComponent

@@ -5,7 +5,7 @@
 
 import React from 'react'
 
-export default React.createClass({
+class DeleteModal extends React.Component {
   render() {
     return (
       <div id={'delete-' + this.props.data.id} className="modal fade" role="dialog">
@@ -25,4 +25,6 @@ export default React.createClass({
       </div>
     )
   }
-})
+}
+
+export default DeleteModal
