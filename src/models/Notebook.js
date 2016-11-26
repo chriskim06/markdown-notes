@@ -44,6 +44,20 @@ class Notebook {
   }
 
   /**
+   * This adds a note ID to this notebook's array of notes.
+   *
+   * @param {string} note - The note to add.
+   */
+  addNote(note) {
+    const parsed = JSON.parse(this.notes)
+    if (!parsed.includes(note)) {
+      parsed.push(note)
+      this.notes = JSON.stringify(parsed)
+      this.persist()
+    }
+  }
+
+  /**
    * This removes a notebook hash from redis.
    *
    * @param {string} key - The ID of the notebook to be deleted.
@@ -61,7 +75,7 @@ class Notebook {
   }
 
   /**
-   * This saves new fields to an existing note object. Only non null
+   * This saves new fields to an existing notebook. Only non null
    * and non empty values overwrite the previous ones.
    *
    * @param {string} key - The ID of the notebook to update.
@@ -77,9 +91,9 @@ class Notebook {
       if (notes && notes.length) {
         response.notes = JSON.stringify(notes)
       }
-      return response.persist()
+      response.persist()
     }, (error) => {
-      return Promise.reject(error)
+      Promise.reject(error)
     })
   }
 
@@ -176,17 +190,9 @@ class Notebook {
    */
   static addNote(key, note) {
     return Notebook.get(key).then((response) => {
-      if (response && response.notes) {
-        const parsed = JSON.parse(response.notes)
-        if (!parsed.includes(note)) {
-          parsed.push(note)
-          response.notes = JSON.stringify(parsed)
-          return response.persist()
-        }
-      }
-      return Promise.resolve()
+      response.addNote(note)
     }, (error) => {
-      return Promise.reject(error)
+      Promise.reject(error)
     })
   }
 

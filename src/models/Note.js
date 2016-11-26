@@ -77,13 +77,13 @@ class Note {
     const p1 = Notebook.get(notebook)
     const p2 = Note.get(key)
     return Promise.all([p1, p2]).then((response) => {
-      Notebook.addNote(notebook, key)
+      response[0].addNote(key)
       response[1].title = title
       response[1].content = content
       response[1].updated = Date.now()
-      return response[1].persist()
+      response[1].persist()
     }, (error) => {
-      return Promise.reject(error)
+      Promise.reject(error)
     })
   }
 

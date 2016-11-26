@@ -36,7 +36,11 @@ router.get('/notes/:id', (req, res, next) => {
  * UPDATE the notes in a notebook
  */
 router.post('/notes/update', (req, res, next) => {
-  Notebook.update(req.body.notebookId, null, req.body.notes).then(() => {
+  let notes = req.body.notes
+  if (req.body.notes.constructor !== Array) {
+    notes = [req.body.notes]
+  }
+  Notebook.update(req.body.notebookId, null, notes).then(() => {
     res.redirect(`/notebooks/notes/${req.body.notebookId}`)
   }, (error) => {
     next(error)
