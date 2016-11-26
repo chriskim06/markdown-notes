@@ -159,23 +159,22 @@ class Notebook {
   static getNotes(key, sort, asc) {
     return new Promise((resolve, reject) => {
       Notebook.get(key).then((response) => {
-        if (response.notes && response.notes !== '[]') {
+        if (!response.notes || response.notes === '[]') {
+          resolve({notebook: response.name, notes: []})
+        } else {
           const cmds = []
-          const ids = JSON.parse(response.notes)
-          ids.forEach((id) => {
+          JSON.parse(response.notes).forEach((id) => {
             cmds.push(['hgetall', `notes:${id}`])
           })
           client.multi(cmds).exec((err, replies) => {
-            const x = sortNotes(replies, sort, asc, response.name)
-            resolve(x)
-          })
-        } else {
-          resolve({
-            notebook: response.name,
-            notes: []
+            if (err) {
+              reject(err)
+            } else {
+              resolve({notebook: response.name, notes: sortNotes(replies, sort, asc)})
+            }
           })
         }
-      }, (error) => {
+      }).catch((error) => {
         reject(error)
       })
     })

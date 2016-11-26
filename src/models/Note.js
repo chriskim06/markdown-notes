@@ -124,8 +124,7 @@ class Note {
               cmds.push(['hgetall', `${n}:${id}`])
             })
             client.multi(cmds).exec((err, replies) => {
-              let x = sortNotes(replies, sort, asc, null)
-              resolve(x.notes)
+              resolve(sortNotes(replies, sort, asc))
             })
           } else {
             resolve(null)

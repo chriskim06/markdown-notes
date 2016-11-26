@@ -49,9 +49,9 @@ export const cast = (src, prototype) => {
  * @param {Array} reply - The array of notes to sort.
  * @param {string} prop - The property to sort the notes by.
  * @param {number} asc - Sorts ascending if this is a truthy value.
- * @param {?string} notebook - The notebook ID.
+ * @returns {Array}
  */
-export const sortNotes = (reply, prop, asc, notebook) => {
+export const sortNotes = (reply, prop, asc) => {
   const notes = []
   if (reply && reply.length) {
     reply.forEach((note) => {
@@ -76,8 +76,5 @@ export const sortNotes = (reply, prop, asc, notebook) => {
       }
     })
   }
-  return {
-    notebook: notebook,
-    notes: notes
-  }
+  return notes
 }
