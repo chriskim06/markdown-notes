@@ -32,7 +32,7 @@ client.on('connect', () => {
         console.error(error)
       })
     }
-  }, (error) => {
+  }).catch((error) => {
     console.error(error)
   })
 })

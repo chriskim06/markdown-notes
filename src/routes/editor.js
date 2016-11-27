@@ -5,6 +5,7 @@
 
 import Note from '../models/Note'
 import Notebook from '../models/Notebook'
+import { stack } from '../util/helper'
 import { Router } from 'express'
 const router = Router()
 
@@ -19,8 +20,8 @@ router.get('/add', (req, res, next) => {
       notebooks: response,
       showNotebooks: true
     })
-  }, (error) => {
-    next(error)
+  }).catch((error) => {
+    next(stack(error))
   })
 })
 
@@ -36,8 +37,8 @@ router.get('/update/:id/:notebook?', (req, res, next) => {
       note: response.content,
       showNotebooks: false
     })
-  }, (error) => {
-    next(error)
+  }).catch((error) => {
+    next(stack(error))
   })
 })
 

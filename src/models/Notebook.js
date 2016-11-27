@@ -5,7 +5,7 @@
 
 import client from './db'
 import Model from './Model'
-import { sortNotes } from '../util/helper'
+import { sortNotes, stack } from '../util/helper'
 
 const nb = 'notebooks'
 const nb_set = 'notebook_id_set'
@@ -18,7 +18,6 @@ class Notebook extends Model {
   /**
    * Notebooks are simple. They only have a title and a list of
    * the notes that are a part of the notebook.
-   *
    * @constructor
    * @param {string} name - The visible title of the notebook.
    */
@@ -30,7 +29,6 @@ class Notebook extends Model {
 
   /**
    * This saves a notebook hash in redis.
-   *
    * @returns {Promise}
    * @see Model#persist
    */
@@ -40,7 +38,6 @@ class Notebook extends Model {
 
   /**
    * This adds a note ID to this notebook's array of notes.
-   *
    * @param {string} note - The note to add.
    */
   addNote(note) {
@@ -54,7 +51,6 @@ class Notebook extends Model {
 
   /**
    * This removes a notebook hash from redis.
-   *
    * @param {string} key - The ID of the notebook to be deleted.
    * @returns {Promise}
    * @see Model#remove
@@ -66,7 +62,6 @@ class Notebook extends Model {
   /**
    * This saves new fields to an existing notebook. Only non null
    * and non empty values overwrite the previous ones.
-   *
    * @param {string} key - The ID of the notebook to update.
    * @param {?string} name - The new title to set.
    * @param {?Array} notes - The new note IDs to set.
@@ -81,14 +76,13 @@ class Notebook extends Model {
         response.notes = JSON.stringify(notes)
       }
       response.persist()
-    }, (error) => {
-      Promise.reject(error)
+    }).catch((error) => {
+      Promise.reject(stack(error))
     })
   }
 
   /**
    * This gets a single notebook from redis.
-   *
    * @param {string} key - The ID of the notebook.
    * @returns {Promise}
    * @see Model#get
@@ -99,7 +93,6 @@ class Notebook extends Model {
 
   /**
    * This gets all of the notebooks from redis.
-   *
    * @returns {Promise}
    * @see Model#getAll
    */
@@ -107,7 +100,7 @@ class Notebook extends Model {
     return new Promise((resolve, reject) => {
       super.getAll(nb, nb_set, (err, replies) => {
         if (err) {
-          reject(err)
+          reject(stack(err))
         } else {
           if (replies && replies.length) {
             replies.sort((a, b) => a.name > b.name)
@@ -121,7 +114,6 @@ class Notebook extends Model {
   /**
    * This resolves an array of all the notes that belong to this
    * notebook sorted by last modification date.
-   *
    * @param {string} key - The notebook ID whose notes this method returns.
    * @param {string} sort - The property to sort the notes by.
    * @param {number} asc - Sorts ascending if this is a truthy value.
@@ -139,21 +131,20 @@ class Notebook extends Model {
           })
           client.multi(cmds).exec((err, replies) => {
             if (err) {
-              reject(err)
+              reject(stack(err))
             } else {
               resolve({notebook: response.name, notes: sortNotes(replies, sort, asc)})
             }
           })
         }
       }).catch((error) => {
-        reject(error)
+        reject(stack(error))
       })
     })
   }
 
   /**
    * This adds a note ID to this notebook's array of notes.
-   *
    * @param {string} key - The ID of the notebook.
    * @param {string} note - The note to add.
    * @returns {Promise}
@@ -161,8 +152,8 @@ class Notebook extends Model {
   static addNote(key, note) {
     return Notebook.get(key).then((response) => {
       response.addNote(note)
-    }, (error) => {
-      Promise.reject(error)
+    }).catch((error) => {
+      Promise.reject(stack(error))
     })
   }
 

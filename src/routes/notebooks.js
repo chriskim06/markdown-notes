@@ -5,6 +5,7 @@
 
 import Note from '../models/Note'
 import Notebook from '../models/Notebook'
+import { stack } from '../util/helper'
 import { Router } from 'express'
 const router = Router()
 
@@ -14,8 +15,8 @@ const router = Router()
 router.get('/', (req, res, next) => {
   Notebook.getAll().then((response) => {
     res.render('index', {notebookNames: response})
-  }, (error) => {
-    next(error)
+  }).catch((error) => {
+    next(stack(error))
   })
 })
 
@@ -37,7 +38,7 @@ router.get('/notes/:id', (req, res, next) => {
       })
     })
   }).catch((error) => {
-    next(error)
+    next(stack(error))
   })
 })
 
@@ -53,8 +54,8 @@ router.post('/notes/update', (req, res, next) => {
   }
   Notebook.update(req.body.notebookId, null, notes).then(() => {
     res.redirect(`/notebooks/notes/${req.body.notebookId}`)
-  }, (error) => {
-    next(error)
+  }).catch((error) => {
+    next(stack(error))
   })
 })
 
@@ -64,8 +65,8 @@ router.post('/notes/update', (req, res, next) => {
 router.post('/create', (req, res, next) => {
   new Notebook(req.body.title).persist().then(() => {
     res.redirect('/')
-  }, (error) => {
-    next(error)
+  }).catch((error) => {
+    next(stack(error))
   })
 })
 
@@ -75,8 +76,8 @@ router.post('/create', (req, res, next) => {
 router.post('/edit', (req, res, next) => {
   Notebook.update(req.body.notebookId, req.body.title, null).then(() => {
     res.redirect('/')
-  }, (error) => {
-    next(error)
+  }).catch((error) => {
+    next(stack(error))
   })
 })
 
@@ -86,8 +87,8 @@ router.post('/edit', (req, res, next) => {
 router.post('/delete/:id', (req, res, next) => {
   Notebook.remove(req.params.id).then(() => {
     res.redirect('/')
-  }, (error) => {
-    next(error)
+  }).catch((error) => {
+    next(stack(error))
   })
 })
 

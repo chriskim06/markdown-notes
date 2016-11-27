@@ -10,8 +10,9 @@ class Model {
 
   /**
    * This is the most basic requirement for persisted models.
-   *
    * @constructor
+   * @param {string} hashkey - The model's key prefix (for uniquely identifying them).
+   * @param {string} setkey - The prefix for the set that holds the model IDs.
    */
   constructor(hashkey, setkey) {
     this.id = uuid()
@@ -21,7 +22,6 @@ class Model {
 
   /**
    * This saves a model as a hash in redis.
-   *
    * @returns {Promise}
    */
   persist() {
@@ -37,7 +37,6 @@ class Model {
 
   /**
    * This removes a model from redis.
-   *
    * @param {string} key - The ID of the notebook to be deleted.
    * @param {string} hashkey - The model's key prefix (for uniquely identifying them).
    * @param {string} setkey - The prefix for the set that holds the model IDs.
@@ -56,7 +55,6 @@ class Model {
 
   /**
    * This gets an instance of the model from redis.
-   *
    * @param {string} key - The ID of the notebook.
    * @param {string} hashkey - The model's key prefix (for uniquely identifying them).
    * @param {Object} prototype - The prototype of the object to cast to.
@@ -76,7 +74,6 @@ class Model {
 
   /**
    * This gets all instances of the model from redis.
-   *
    * @param {string} hashkey - The model's key prefix (for uniquely identifying them).
    * @param {string} setkey - The prefix for the set that holds the model IDs.
    * @param {function} callback - The callback function to execute. It gets passed the

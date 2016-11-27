@@ -13,7 +13,7 @@ const router = Router()
 router.get('/', (req, res, next) => {
   Notebook.getAll().then((response) => {
     res.render('index', {notebookNames: response})
-  }, (error) => {
+  }).catch((error) => {
     next(error)
   })
 })

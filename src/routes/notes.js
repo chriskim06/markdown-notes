@@ -5,6 +5,7 @@
 
 import Note from '../models/Note'
 import Notebook from '../models/Notebook'
+import { stack } from '../util/helper'
 import { Router } from 'express'
 const router = Router()
 
@@ -14,8 +15,8 @@ const router = Router()
 router.get('/', (req, res, next) => {
   Note.getAll('edited', 0).then((response) => {
     res.render('notes', {id: '', title: 'All Notes', notes: response, all: [], button: false})
-  }, (error) => {
-    next(error)
+  }).catch((error) => {
+    next(stack(error))
   })
 })
 
@@ -29,7 +30,7 @@ router.post('/create', (req, res, next) => {
   Promise.all([p0, p1]).then(() => {
     res.redirect('/notes')
   }).catch((error) => {
-    next(error)
+    next(stack(error))
   })
 })
 
@@ -41,8 +42,8 @@ router.post('/update/:id/:notebook?', (req, res, next) => {
     const notebook = req.params.notebook
     const location = (notebook === 'undefined' || notebook === '') ? '/notes' : '/notebooks/notes/' + notebook
     res.redirect(location)
-  }, (error) => {
-    next(error)
+  }).catch((error) => {
+    next(stack(error))
   })
 })
 
@@ -52,8 +53,8 @@ router.post('/update/:id/:notebook?', (req, res, next) => {
 router.post('/delete/:id', (req, res, next) => {
   Note.remove(req.params.id).then(() => {
     res.redirect('/notes')
-  }, (error) => {
-    next(error)
+  }).catch((error) => {
+    next(stack(error))
   })
 })
 
