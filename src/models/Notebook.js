@@ -6,7 +6,7 @@
 import R from 'ramda'
 import client from './db'
 import Model from './Model'
-import { stack } from '../util/helper'
+import { resolvePromise, stack } from '../util/helper'
 
 const nb = 'notebooks'
 const nb_set = 'notebook_id_set'
@@ -113,20 +113,9 @@ class Notebook extends Model {
   }
 
   /**
-   * This resolves an array of all the notes that belong to this notebook.
-   * This should be used when you only have the notebook id.
-   * @param {string} key - The notebook ID whose notes this method returns.
-   * @returns {Promise}
-   */
-  static getNotes(key) {
-    let comp = R.composeP(Notebook.getAllNotes, Notebook.get)
-    return comp(key)
-  }
-
-  /**
    * This gets the notes in a notebook. This should be used if you already
    * have the notebook object.
-   * @param notebook
+   * @param {object} notebook - The notebook object to get notes from.
    * @returns {Promise}
    */
   static getAllNotes(notebook) {
@@ -139,14 +128,21 @@ class Notebook extends Model {
           cmds.push(['hgetall', `notes:${id}`])
         })
         client.multi(cmds).exec((err, replies) => {
-          if (err) {
-            reject(stack(err))
-          } else {
-            resolve({notebook: notebook.name, notes: replies})
-          }
+          resolvePromise(err, {notebook: notebook.name, notes: replies}, resolve, reject)
         })
       }
     })
+  }
+
+  /**
+   * This resolves an array of all the notes that belong to this notebook.
+   * This should be used when you only have the notebook id.
+   * @param {string} key - The notebook ID whose notes this method returns.
+   * @returns {Promise}
+   */
+  static getNotes(key) {
+    let comp = R.composeP(Notebook.getAllNotes, Notebook.get)
+    return comp(key)
   }
 
   /**

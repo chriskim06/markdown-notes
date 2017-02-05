@@ -5,7 +5,7 @@
 
 import Model from './Model'
 import Notebook from './Notebook'
-import { stack } from '../util/helper'
+import { resolvePromise, stack } from '../util/helper'
 
 const n = 'notes'
 const n_set = 'notes_id_set'
@@ -91,11 +91,7 @@ class Note extends Model {
   static getAll() {
     return new Promise((resolve, reject) => {
       super.getAll(n, n_set, (err, replies) => {
-        if (err) {
-          reject(stack(err))
-        } else {
-          resolve(replies)
-        }
+        resolvePromise(err, replies, resolve, reject)
       })
     })
   }
