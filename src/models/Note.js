@@ -80,11 +80,7 @@ class Note extends Model {
    * @see Model#get
    */
   static get(key) {
-    super.get(key, n, Note.prototype).then((response) => {
-      return Promise.resolve(response)
-    }).catch((error) => {
-      return Promise.reject(stack(error))
-    })
+    return super.get(key, n, Note.prototype)
   }
 
   /**

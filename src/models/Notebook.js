@@ -3,9 +3,10 @@
  * @author Chris
  */
 
+import R from 'ramda'
 import client from './db'
 import Model from './Model'
-import { sortNotes, stack } from '../util/helper'
+import { stack } from '../util/helper'
 
 const nb = 'notebooks'
 const nb_set = 'notebook_id_set'
@@ -112,34 +113,37 @@ class Notebook extends Model {
   }
 
   /**
-   * This resolves an array of all the notes that belong to this
-   * notebook sorted by last modification date.
+   * This resolves an array of all the notes that belong to this notebook.
    * @param {string} key - The notebook ID whose notes this method returns.
-   * @param {string} sort - The property to sort the notes by.
-   * @param {number} asc - Sorts ascending if this is a truthy value.
    * @returns {Promise}
    */
-  static getNotes(key, sort, asc) {
+  static getNotes(key) {
+    let comp = R.composeP(Notebook.getAllNotes, Notebook.get)
+    return comp(key)
+  }
+
+  /**
+   * This gets the notes in a notebook.
+   * @param notebook
+   * @returns {Promise}
+   */
+  static getAllNotes(notebook) {
     return new Promise((resolve, reject) => {
-      Notebook.get(key).then((response) => {
-        if (!response.notes || response.notes === '[]') {
-          resolve({notebook: response.name, notes: []})
-        } else {
-          const cmds = []
-          JSON.parse(response.notes).forEach((id) => {
-            cmds.push(['hgetall', `notes:${id}`])
-          })
-          client.multi(cmds).exec((err, replies) => {
-            if (err) {
-              reject(stack(err))
-            } else {
-              resolve({notebook: response.name, notes: sortNotes(replies, sort, asc)})
-            }
-          })
-        }
-      }).catch((error) => {
-        reject(stack(error))
-      })
+      if (!notebook.notes || notebook.notes === '[]') {
+        resolve({notebook: notebook.name, notes: []})
+      } else {
+        const cmds = []
+        JSON.parse(notebook.notes).forEach((id) => {
+          cmds.push(['hgetall', `notes:${id}`])
+        })
+        client.multi(cmds).exec((err, replies) => {
+          if (err) {
+            reject(stack(err))
+          } else {
+            resolve({notebook: notebook.name, notes: replies})
+          }
+        })
+      }
     })
   }
 
