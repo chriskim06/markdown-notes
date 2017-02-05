@@ -114,6 +114,7 @@ class Notebook extends Model {
 
   /**
    * This resolves an array of all the notes that belong to this notebook.
+   * This should be used when you only have the notebook id.
    * @param {string} key - The notebook ID whose notes this method returns.
    * @returns {Promise}
    */
@@ -123,7 +124,8 @@ class Notebook extends Model {
   }
 
   /**
-   * This gets the notes in a notebook.
+   * This gets the notes in a notebook. This should be used if you already
+   * have the notebook object.
    * @param notebook
    * @returns {Promise}
    */

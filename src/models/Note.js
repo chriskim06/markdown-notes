@@ -5,7 +5,7 @@
 
 import Model from './Model'
 import Notebook from './Notebook'
-import { sortNotes, stack } from '../util/helper'
+import { stack } from '../util/helper'
 
 const n = 'notes'
 const n_set = 'notes_id_set'
@@ -85,18 +85,16 @@ class Note extends Model {
 
   /**
    * This gets all of the notes from redis.
-   * @param {string} sort - The property to sort the notes by.
-   * @param {number} asc - Sorts ascending if this is a truthy value.
    * @returns {Promise}
    * @see Model#getAll
    */
-  static getAll(sort, asc) {
+  static getAll() {
     return new Promise((resolve, reject) => {
       super.getAll(n, n_set, (err, replies) => {
         if (err) {
           reject(stack(err))
         } else {
-          resolve(sortNotes(replies, sort, asc))
+          resolve(replies)
         }
       })
     })

@@ -25,13 +25,13 @@ router.get('/', (req, res, next) => {
  */
 router.get('/notes/:id', (req, res, next) => {
   const p0 = Notebook.getNotes(req.params.id)
-  const p1 = Note.getAll('title', 1)
+  const p1 = Note.getAll()
   Promise.all([p0, p1]).then((notes) => {
     res.render('notes', {
       id: req.params.id,
       title: notes[0].notebook,
       notes: sortNotes(notes[0].notes, 'edited', 0),
-      all: notes[1],
+      all: sortNotes(notes[1], 'title', 1),
       button: true,
       selected: notes[0].notes.map((note) => {
         return note.id

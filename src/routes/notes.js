@@ -5,7 +5,7 @@
 
 import Note from '../models/Note'
 import Notebook from '../models/Notebook'
-import { stack } from '../util/helper'
+import { sortNotes, stack } from '../util/helper'
 import { Router } from 'express'
 const router = Router()
 
@@ -13,8 +13,13 @@ const router = Router()
  * GET all notes
  */
 router.get('/', (req, res, next) => {
-  Note.getAll('edited', 0).then((response) => {
-    res.render('notes', {id: '', title: 'All Notes', notes: response, all: [], button: false})
+  Note.getAll().then((response) => {
+    res.render('notes', {
+      id: '',
+      title: 'All Notes',
+      notes: sortNotes(response, 'edited', 0),
+      all: [], button: false
+    })
   }).catch((error) => {
     next(stack(error))
   })
