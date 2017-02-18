@@ -5,12 +5,12 @@
   "scripts": {
     "start": "node ./bin/www",
     "debug": "node $NODE_DEBUG_OPTION ./node_modules/babel-cli/bin/babel-node.js ./bin/www --presets es2015,react",
-    "resources": "cp -r bin out/ && cp -r public out/ && cp -r views out/",
-    "out-bin": "babel bin --out-dir out/bin --source-maps",
-    "out-models": "babel models --out-dir out/models --source-maps",
-    "out-routes": "babel routes --out-dir out/routes --source-maps",
-    "out-util": "babel util --out-dir out/util --source-maps",
-    "out-app": "babel app.js --out-file out/app.js --source-maps",
+    "resources": "cp -r bin out/src/ && cp -r public out/src/ && cp -r views out/src/",
+    "out-bin": "babel bin --out-dir out/src/bin --source-maps",
+    "out-models": "babel models --out-dir out/src/models --source-maps",
+    "out-routes": "babel routes --out-dir out/src/routes --source-maps",
+    "out-util": "babel util --out-dir out/src/util --source-maps",
+    "out-app": "babel app.js --out-file out/src/app.js --source-maps",
     "babel": "npm run resources && npm run out-models && npm run out-routes && npm run out-util && npm run out-app"
   },
   "dependencies": {

@@ -30,7 +30,7 @@ router.get('/notes/:id', (req, res, next) => {
     res.render('notes', {
       id: response[0]._id,
       title: response[0].title,
-      notes: sortNotes(response[0].notes, 'updated', 1),
+      notes: sortNotes(response[0].notes, 'updated', 0),
       all: sortNotes(response[1], 'title', 1),
       selected: response[0].notes.map((note) => {
         return note.id
