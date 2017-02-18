@@ -5,7 +5,7 @@
 
 import React from 'react'
 
-export default React.createClass({
+class NotebookName extends React.Component {
   render() {
     return (
       <div className="panel-body">
@@ -13,4 +13,6 @@ export default React.createClass({
       </div>
     )
   }
-})
+}
+
+export default NotebookName

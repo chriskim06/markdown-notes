@@ -5,7 +5,7 @@
 
 import React from 'react'
 
-export default React.createClass({
+class NotePreview extends React.Component {
   render() {
     let data = this.props.data
     return (
@@ -23,4 +23,6 @@ export default React.createClass({
       </div>
     )
   }
-})
+}
+
+export default NotePreview

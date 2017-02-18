@@ -8,9 +8,9 @@ import DefaultLayout from './layouts/default'
 import NotebookComponent from './notebook-component'
 import AddNotebook from './add-notebook'
 
-export default React.createClass({
+class Index extends React.Component {
   render() {
-    let content = this.props.notebookNames.map((notebook) => {
+    let content = this.props.notebooks.map((notebook) => {
       return <NotebookComponent key={notebook.id} data={notebook} />
     })
     return (
@@ -29,4 +29,6 @@ export default React.createClass({
       </DefaultLayout>
     )
   }
-})
+}
+
+export default Index

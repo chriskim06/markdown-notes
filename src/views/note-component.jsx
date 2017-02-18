@@ -13,19 +13,22 @@ const style = {
   color: '#fff'
 }
 
-export default React.createClass({
+class NoteComponent extends React.Component {
   render() {
     let data = this.props.data
+    let date = new Date(data.updated).toLocaleString()
     return (
       <div>
         <div className="panel panel-default">
           <div className="panel-heading clearfix">
             <h3 className="panel-title pull-left">
-              {'(' + data.edited + ') '}<span className="note-title">{data.title}</span>
+              <span className="note-title" data-tooltip={'Updated: ' + date} data-tooltip-position="right">
+                {data.title}
+              </span>
             </h3>
           </div>
           <div className="panel-body">
-            <p className="noteCondensed">{data.summary}</p>
+            <p className="noteCondensed">{data.content}</p>
           </div>
           <div className="panel-footer clearfix">
             <a className="btn btn-default btn-sm nb-actions" title="Edit" style={style} href={'/editor/update/' + data.id}>
@@ -44,4 +47,6 @@ export default React.createClass({
       </div>
     )
   }
-})
+}
+
+export default NoteComponent
