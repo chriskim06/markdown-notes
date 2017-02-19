@@ -13,6 +13,8 @@ const notebookSchema = new mongoose.Schema({
   notes: [{type: mongoose.Schema.Types.ObjectId, ref: 'Note'}]
 })
 
+notebookSchema.path('title').required(true, 'Notebook title cannot be blank')
+
 mongoose.model('Notebook', notebookSchema)
 
 export const Notebook = mongoose.model('Notebook')

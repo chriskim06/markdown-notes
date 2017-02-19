@@ -4,7 +4,6 @@
  */
 
 import { Note } from '../models/Note'
-import { sortNotes } from '../util/helper'
 import { Router } from 'express'
 const router = Router()
 
@@ -12,10 +11,10 @@ const router = Router()
  * GET all notes
  */
 router.get('/', (req, res, next) => {
-  Note.find({}).then((response) => {
+  Note.find({}).sort({updated: 'desc'}).then((response) => {
     res.render('notes', {
       title: 'All Notes',
-      notes: sortNotes(response, 'updated', 0),
+      notes: response,
       all: [],
       button: false
     })

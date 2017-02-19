@@ -5,7 +5,6 @@
 
 import { Notebook } from '../models/Notebook'
 import { Note } from '../models/Note'
-import { sortNotes } from '../util/helper'
 import { Router } from 'express'
 const router = Router()
 
@@ -24,14 +23,18 @@ router.get('/', (req, res, next) => {
  * GET all notes for a notebook
  */
 router.get('/notes/:id', (req, res, next) => {
-  const p0 = Notebook.findOne({_id: req.params.id}).populate('notes').exec()
-  const p1 = Note.find({})
+  const p0 = Notebook.findOne({_id: req.params.id}).populate({
+    path: 'notes',
+    select: 'title content notebook updated',
+    options: {sort: {updated: 'desc'}}
+  }).exec()
+  const p1 = Note.find({}).sort({title: 'asc'})
   Promise.all([p0, p1]).then((response) => {
     res.render('notes', {
       id: response[0]._id,
       title: response[0].title,
-      notes: sortNotes(response[0].notes, 'updated', 0),
-      all: sortNotes(response[1], 'title', 1),
+      notes: response[0].notes,
+      all: response[1],
       selected: response[0].notes.map((note) => {
         return note.id
       }),

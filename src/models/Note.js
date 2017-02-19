@@ -12,6 +12,8 @@ const noteSchema = new mongoose.Schema({
   updated: {type: Date, default: new Date()}
 })
 
+noteSchema.path('title').required(true, 'Note title cannot be blank')
+
 mongoose.model('Note', noteSchema)
 
 export const Note = mongoose.model('Note')
