@@ -14,6 +14,7 @@ const noteSchema = new mongoose.Schema({
 
 noteSchema.path('title').required(true, 'Note title cannot be blank')
 
-mongoose.model('Note', noteSchema)
 
-export const Note = mongoose.model('Note')
+const Note = mongoose.model('Note', noteSchema)
+
+export default Note

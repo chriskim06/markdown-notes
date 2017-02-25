@@ -15,6 +15,7 @@ const notebookSchema = new mongoose.Schema({
 
 notebookSchema.path('title').required(true, 'Notebook title cannot be blank')
 
-mongoose.model('Notebook', notebookSchema)
 
-export const Notebook = mongoose.model('Notebook')
+const Notebook = mongoose.model('Notebook', notebookSchema)
+
+export default Notebook

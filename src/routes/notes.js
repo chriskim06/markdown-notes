@@ -3,7 +3,7 @@
  * @author Chris
  */
 
-import { Note } from '../models/Note'
+import Note from '../models/Note'
 import { Router } from 'express'
 const router = Router()
 
