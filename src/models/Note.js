@@ -31,15 +31,6 @@ class Note extends Model {
   }
 
   /**
-   * This saves a note to the notes hash in redis.
-   * @returns {Promise}
-   * @see Model#persist
-   */
-  persist() {
-    return super.persist()
-  }
-
-  /**
    * This removes a note from the redis hash.
    * @param {string} key - The ID of the note to be deleted.
    * @returns {Promise}

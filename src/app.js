@@ -64,25 +64,14 @@ app.use((req, res, next) => {
 });
 
 // print stacktrace in dev but not in production
-if (process.env.NODE_ENV !== 'production') {
-  app.use((err, req, res, next) => {
-    handleError(err, res, err)
-  })
-} else {
-  app.use((err, req, res, next) => {
-    handleError(err, res, '')
-  })
-}
-
-// Function that renders the error page
-const handleError = (err, res, data) => {
+app.use((err, req, res, next) => {
   console.error(err)
   res.status(err.status || 500)
   res.render('error-page', {
     statusCode: res.statusCode,
     message: err.message,
-    err: (data == null) ? new Error().stack : data
+    err: (process.env.NODE_ENV !== 'production') ? new Error().stack : ''
   })
-}
+})
 
 module.exports = app

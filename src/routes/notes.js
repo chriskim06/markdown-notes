@@ -18,7 +18,8 @@ router.get('/', (req, res, next) => {
       id: '',
       title: 'All Notes',
       notes: sortNotes(response, 'edited', 0),
-      all: [], button: false
+      all: [],
+      button: false
     })
   }).catch((error) => {
     next(stack(error))

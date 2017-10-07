@@ -29,15 +29,6 @@ class Notebook extends Model {
   }
 
   /**
-   * This saves a notebook hash in redis.
-   * @returns {Promise}
-   * @see Model#persist
-   */
-  persist() {
-    return super.persist()
-  }
-
-  /**
    * This adds a note ID to this notebook's array of notes.
    * @param {string} note - The note to add.
    */
